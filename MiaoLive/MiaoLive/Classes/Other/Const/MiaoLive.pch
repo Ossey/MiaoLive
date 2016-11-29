@@ -1,0 +1,46 @@
+//
+//  MiaoLive.pch
+//  MiaoLive
+//
+//  Created by mofeini on 16/11/16.
+//  Copyright © 2016年 com.test.demo. All rights reserved.
+//
+
+#ifndef MiaoShow_pch
+#define MiaoShow_pch
+
+#import <IJKMediaFramework/IJKMediaFramework.h>
+#import "XYConst.h"
+#import <Masonry.h>
+#import "UIButton+XYExtension.h"
+#import "UIImage+XYExtension.h"
+#import "UIDevice+XYExtension.h"
+#import "NSObject+XYHUD.h"
+#import "UIView+XYExtension.h"
+#import "UIViewController+XYHUD.h"
+#import "NSObject+XYExtension.h"
+
+#define xyColorWithRGB(r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1.0]
+#define xyRandomColor xyColorWithRGB(arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256))
+#define xyKeyColor xyColorWithRGB(216, 41, 116)
+#define xyApp [UIApplication sharedApplication]
+#define xyAppTinColor xyColorWithRGB(249, 112, 164)
+
+/******** 屏幕 *********/
+#define xyScreenW CGRectGetWidth([UIScreen mainScreen].bounds)
+#define xyScreenH CGRectGetHeight([UIScreen mainScreen].bounds)
+#define xyTabBarH 49
+#define xyNavigationBarH 44
+
+#define xyDocumentPath NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject
+#define xCcachePath NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject
+#define xyPreferencePath NSSearchPathForDirectoriesInDomains(NSPreferencePanesDirectory, NSUserDomainMask, YES).firstObject
+
+/******** 首页titleView的选择按钮的宽度 *********/
+#define xyHomeTitleButtonWidth  60
+#define xyHomeDefaultMargin 10
+
+/************* 网络 *********************/
+#define xyBaseURLStr @"http://live.9158.com"
+
+#endif /* MiaoShow_pch */
