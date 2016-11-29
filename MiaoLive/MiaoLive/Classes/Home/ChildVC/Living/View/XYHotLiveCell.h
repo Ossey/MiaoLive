@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class XYLiveItem;
-@interface XYHotLiveCell : UITableViewCell
+@interface XYHotLiveCell : UICollectionViewCell
 
 /** 直播模型 */
 @property (nonatomic, strong) XYLiveItem *liveItem;

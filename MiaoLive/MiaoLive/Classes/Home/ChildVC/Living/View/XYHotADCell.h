@@ -10,7 +10,7 @@
 #import <XRCarouselView.h>
 
 @class XYTopADItem;
-@interface XYHotADCell : UITableViewCell <XRCarouselViewDelegate>
+@interface XYHotADCell : UICollectionReusableView <XRCarouselViewDelegate>
 
 /** 广告模型数组 */
 @property (nonatomic, strong) NSArray *adItems;

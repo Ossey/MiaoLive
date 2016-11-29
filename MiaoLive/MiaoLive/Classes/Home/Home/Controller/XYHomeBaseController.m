@@ -139,7 +139,9 @@
     [super viewWillLayoutSubviews];
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.width.height.mas_equalTo(self.view);
+        make.left.width.mas_equalTo(self.view);
+//        make.height.mas_equalTo(self.view).mas_offset(-CGRectGetHeight(self.titleScrollView.frame));
+        make.height.mas_equalTo(self.view);
         make.top.mas_equalTo(self.titleScrollView.mas_bottom);
     }];
 
@@ -234,7 +236,7 @@
     // 计算最大的偏移量
     // 问题: 此时self.titleScrollView.contentSize.width为0
     CGFloat maxOffsetX = self.titleScrollView.contentSize.width - xyScreenW;
-    NSLog(@"self.titleScrollView.contentSize.width==%f", self.titleScrollView.contentSize.width);
+//    NSLog(@"self.titleScrollView.contentSize.width==%f", self.titleScrollView.contentSize.width);
     if (offsetX > maxOffsetX) {
         offsetX = maxOffsetX;
     }

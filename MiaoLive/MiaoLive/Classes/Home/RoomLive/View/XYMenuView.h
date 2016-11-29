@@ -20,6 +20,11 @@ typedef NS_ENUM(NSInteger, XYMenuViewStyle) {
     XYMenuViewStyleVertical          // 竖向
 };
 
+typedef NS_ENUM(NSInteger, XYMenuViewAnimationOrientation) {
+    XYMenuViewAnimationOrientationFromBottom = 0,   // 从底部开始做动画
+    XYMenuViewAnimationOrientationFromTop          // 从顶部开始做动画
+};
+
 NS_ASSUME_NONNULL_BEGIN
 @interface XYMenuView : UIView
 /** 每个按钮的高度 **/
@@ -33,24 +38,35 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *itemTitleColor;
 
 /**
+ * @explain 点击menuView上不同类型按钮的事件回调
+ *
+ * type  不同类型按钮
+ */
+@property (nonatomic, copy) void (^menuViewClickBlock)(XYMenuViewBtnType type);
+
+/** dissmiss以后的回调 */
+@property (nonatomic, copy) void (^dismissCompletionBlock)();
+
+/** show以后的回调 */
+@property (nonatomic, copy) void (^showCompletionBlock)();
+
+/**
  * @explain 添加当前弹框菜单view到你的视图上
  *
  * @param   superView  当前view会成为superView的子控件
  * @return  XYMenuView实例化的对象
  */
 + (instancetype)menuViewToSuperView:(UIView *)superView;
++ (instancetype)menuViewToSuperView:(UIView *)superView scrollViewHeight:(CGFloat)height animationOrientation:(XYMenuViewAnimationOrientation)orientation menViewStyle:(XYMenuViewStyle)style;
 
 - (void)showMenuView;
 - (void)dismissMenuView;
 - (void)showMenuView:(nullable void(^)())block;
 - (void)dismissMenuView:(nullable void(^)())block;
 - (void)setItemBackGroundColor:(UIColor * _Nonnull)itemBackGroundColor titleColor:(UIColor *)titleColor forState:(UIControlState)state;
-/**
- * @explain 点击menuView上不同类型按钮的事件回调
- *
- * type  不同类型按钮
- */
-@property (nonatomic, copy) void (^menuViewClickBlock)(XYMenuViewBtnType type);
-@property (nonatomic, copy) void (^hiddenCompletionBlock)();
+
+- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 @end
 NS_ASSUME_NONNULL_END

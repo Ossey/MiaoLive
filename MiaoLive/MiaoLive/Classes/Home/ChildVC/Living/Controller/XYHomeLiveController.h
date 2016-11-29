@@ -19,8 +19,8 @@ typedef NS_ENUM(NSInteger, XYHomeLiveType){
     
 };
 
-@interface XYHomeLiveController : UITableViewController
+@interface XYHomeLiveController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>
 @property (nonatomic, weak) UIScrollView *titleView;
-
+@property (nonatomic, weak, readonly) UICollectionView *collectionView;
 - (XYHomeLiveType)liveType;
 @end

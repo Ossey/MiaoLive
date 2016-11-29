@@ -118,6 +118,13 @@ NSString *const CameraAuthorityValue = @"CameraAuthorityValue";
 + (instancetype)showToSuperView:(UIView *)superView tipViewStyle:(XYTipViewStyle)style {
     XYShowTipView *showTipView = [[self alloc] initWithTipViewStyle:style];
     if (superView) {
+        
+        if (CGRectGetHeight(superView.frame) < xyScreenH * 0.5 || CGRectGetHeight(superView.frame) <  xyScreenH * 0.5) {
+            superView = xyApp.keyWindow;
+        }
+        
+//        NSLog(@"%@", superView);
+        
         [superView addSubview:showTipView];
         
         // 默认让创建出来的menView在父控件的最底部

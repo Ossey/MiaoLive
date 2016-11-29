@@ -42,7 +42,7 @@
         _menuView.menuViewStyle = XYMenuViewStyleVertical;
         [_menuView setItemBackGroundColor:[UIColor clearColor] titleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         __weak typeof(self) weakSelf = self;
-        [_menuView setHiddenCompletionBlock:^{
+        [_menuView setDismissCompletionBlock:^{
             weakSelf.toolView.hidden = NO;
         }];
         _menuView.separatorColor = [UIColor colorWithWhite:0 alpha:0.6];

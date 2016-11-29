@@ -17,13 +17,17 @@
 #import "XYWebViewController.h"
 #import "XYRoomLiveController.h"
 #import "XYProfileNavigationController.h"
+#import "XYHomeLiveFlowLayout.h"
+#import "XYMenuView.h"
 
 /**
  根据青花瓷抓取第一次进入此页面的GET请求:@"http://live.9158.com/Fans/GetHotLive?page=1
  下拉刷新时: page 会 加 1
  */
+static NSString *const cellReusableIdentifier = @"XYHotViewController";
+static NSString *const adCellReusableIdentifier = @"XYHotADCell";
 
-@interface XYHomeLiveController ()
+@interface XYHomeLiveController () 
 /** 当前页 */
 @property (nonatomic, assign) NSInteger currentPage;
 /** 最热直播数据模型数组 */
@@ -34,10 +38,31 @@
 @property (nonatomic, strong) NSString *loadLiveURLStr; // 请求
 /** 请求直播数据的字段 */
 @property (nonatomic, strong) NSMutableDictionary *loadLiveParameters; // 请求
+@property (nonatomic, weak) UICollectionView *collectionView;
+@property (nonatomic, weak) XYHomeLiveFlowLayout *flowLayout;
+//@property (nonatomic, weak) UIView *showStyleView;
 @end
 
 @implementation XYHomeLiveController
 #pragma mark - Lazy loading
+
+- (UICollectionView *)collectionView {
+    if (_collectionView == nil) {
+        XYHomeLiveFlowLayout *flowLayout = [[XYHomeLiveFlowLayout alloc] init];
+        _flowLayout = flowLayout;
+        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+        [self.view addSubview:collectionView];
+        _collectionView = collectionView;
+        
+        [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.view);
+        }];
+        
+        
+    }
+    return _collectionView;
+}
+
 - (NSString *)loadLiveURLStr {
     NSString *urlStr;
     // 拼接网络请求的url字符串
@@ -81,19 +106,26 @@
     return _lives;
 }
 
-static NSString *const cellReusableIdentifier = @"XYHotViewController";
-static NSString *const adCellReusableIdentifier = @"XYHotADCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self setup];
+    [self addobserver];
 }
+
 
 - (void)setup {
     
-    [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([XYHotLiveCell class]) bundle:nil] forCellReuseIdentifier:cellReusableIdentifier];
-    [self.tableView registerClass:[XYHotADCell class] forCellReuseIdentifier:adCellReusableIdentifier];
-    self.tableView.mj_header = [XYRefreshGifHeader headerWithRefreshingBlock:^{
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    self.collectionView.backgroundColor = [UIColor whiteColor]; 
+    
+    [self.collectionView registerNib:[UINib nibWithNibName:@"XYHotLiveCell" bundle:nil] forCellWithReuseIdentifier:cellReusableIdentifier];
+    
+    // 添加collectionView的头部视图
+    [self.collectionView registerClass:[XYHotADCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:adCellReusableIdentifier];
+    
+    self.collectionView.mj_header = [XYRefreshGifHeader headerWithRefreshingBlock:^{
         
         self.currentPage = 1;
         // 请求最热直播数据
@@ -102,13 +134,37 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
         [self getTopAD];
     }];
     
-    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+    self.collectionView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         self.currentPage++;
         [self getHotLiveList];
     }];
     
-    [self.tableView.mj_header beginRefreshing];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.collectionView.mj_header beginRefreshing];
+
+    
+}
+
+- (void)addobserver {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showLiveStyle) name:XYChangeShowLiveTypeNotification object:nil];
+}
+
+- (void)showLiveStyle {
+
+    XYMenuView *menuView = [XYMenuView menuViewToSuperView:self.view scrollViewHeight:40 animationOrientation:1 menViewStyle:1];
+
+    menuView.maskAlpha = 0.3;
+    
+    [menuView showMenuView];
+    
+    [menuView setMenuViewClickBlock:^(XYMenuViewBtnType type) {
+        
+        if (type == 0) {
+            self.flowLayout.columnNumber = 1;
+        } else if (type == 1) {
+            self.flowLayout.columnNumber = 2;
+
+        }
+    }];
     
 }
 
@@ -117,7 +173,7 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
 - (void)getTopAD {
     
     // 10秒后再加载请求banner数据
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSString *urlStr = [xyBaseURLStr stringByAppendingPathComponent:@"Living/GetAD"];
         NSDictionary *parameters = @{@"tabid": @1};
         [[XYNetworkTool shareNetWork] GET:urlStr parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -127,7 +183,7 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
                 for (NSDictionary *dict in result) {
                     XYTopADItem *item = [XYTopADItem adItemWithDict:dict];
                     [self.topADS addObject:item];
-                    [self.tableView reloadData];
+                    [self.collectionView reloadData];
                 }
             } else {
                 [self showInfo:@"网络异常"];
@@ -145,8 +201,8 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
 - (void)getHotLiveList {
   
     [[XYNetworkTool shareNetWork] GET:self.loadLiveURLStr parameters:self.loadLiveParameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSDictionary *_Nullable responseObject) {
-        [self.tableView.mj_header endRefreshing];
-        [self.tableView.mj_footer endRefreshing];
+        [self.collectionView.mj_header endRefreshing];
+        [self.collectionView.mj_footer endRefreshing];
         
         // 转换模型
         NSMutableArray *resultArray = [NSMutableArray array];
@@ -165,7 +221,7 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
         
         if (![self isEmptyArray:resultArray]) {
             [self.lives addObjectsFromArray:resultArray];
-            [self.tableView reloadData];
+            [self.collectionView reloadData];
         } else {
             [self xy_showMessage:@"暂时没有更多最新数据"];
             // 恢复当前页
@@ -174,67 +230,63 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@", error);
-        [self.tableView.mj_header endRefreshing];
-        [self.tableView.mj_footer endRefreshing];
+        [self.collectionView.mj_header endRefreshing];
+        [self.collectionView.mj_footer endRefreshing];
         self.currentPage--;
         [self showInfo:@"网络异常, 请尝试刷新"];
     }];
 }
 
-#pragma mark - Table view data source
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
+
+
+#pragma mark - collectionView view data source
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     // 加1是因为第一行设置为banner了
-    return self.topADS.count ? self.lives.count + 1 : self.lives.count;
+//    return self.topADS.count ? self.lives.count + 1 : self.lives.count;
+    return self.lives.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+
     
-    // 第0行展示banner
-    if (self.topADS.count && indexPath.row == 0) {
-        XYHotADCell *cell = [tableView dequeueReusableCellWithIdentifier:adCellReusableIdentifier forIndexPath:indexPath];
-        cell.adItems = self.topADS;
-        if (cell.adItems.count) { // 容错处理，防止加载ad失败时，点击崩溃
-            [cell setImageClickBlock:^(XYTopADItem *adItem) {
-                if (adItem.link.length) {
-                    XYWebViewController *webVc = [[XYWebViewController alloc] initWithURL:[NSURL URLWithString:adItem.link]];
-                    webVc.title = adItem.title;
-                    [self.navigationController pushViewController:webVc animated:YES];
-                }
-            }];
-            
-        }
-        return cell;
-    }
-    
-    XYHotLiveCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReusableIdentifier forIndexPath:indexPath];
+    XYHotLiveCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellReusableIdentifier forIndexPath:indexPath];
     if (self.lives.count) {
-        NSInteger row = self.topADS.count ? indexPath.row - 1 : indexPath.row;
-        cell.liveItem = self.lives[row];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        cell.liveItem = self.lives[indexPath.row];
     }
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (self.topADS.count) {
-        return indexPath.row == 0 ? 100 : 465;
-    } else {
-        return 465;
-    }
-    
-}
 
-#pragma mark - Table view data source
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    NSInteger currentIndex = self.topADS.count ? indexPath.row - 1 : indexPath.row;
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    NSInteger currentIndex = indexPath.row;
     XYRoomLiveController *liveVc = [[XYRoomLiveController alloc] initWithLives:self.lives currentIndex:currentIndex];
     // 包装为导航控制器的原因是让modal的控制器可以push新的控制器
     XYProfileNavigationController *nav = [[XYProfileNavigationController alloc] initWithRootViewController:liveVc];
     [self presentViewController:nav animated:YES completion:nil];
 }
+
+//  返回头视图
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    //如果是头视图
+    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        XYHotADCell *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:adCellReusableIdentifier forIndexPath:indexPath];
+    
+        header.adItems = self.topADS;
+        return header;
+    }
+    //如果底部视图
+    //    if([kind isEqualToString:UICollectionElementKindSectionFooter]){
+    //
+    //    }
+    return nil;
+}
+
+
+
 
 
 

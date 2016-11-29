@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1817089F1DEDE79A00505582 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1817089E1DEDE79A00505582 /* AppDelegate.m */; };
+		181708A21DEDED9000505582 /* XYHomeLiveFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 181708A11DEDED9000505582 /* XYHomeLiveFlowLayout.m */; };
 		18D5F9591DEDD32E0062AACA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9581DEDD32E0062AACA /* main.m */; };
 		18D5F9641DEDD32E0062AACA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18D5F9631DEDD32E0062AACA /* Assets.xcassets */; };
 		18D5F96F1DEDD6DB0062AACA /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18D5F96E1DEDD6DB0062AACA /* Info.plist */; };
@@ -67,7 +69,6 @@
 		18D5FA491DEDD7940062AACA /* XYSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5FA0B1DEDD7930062AACA /* XYSettingViewController.m */; };
 		18D5FA4A1DEDD7940062AACA /* XYShowTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5FA0F1DEDD7930062AACA /* XYShowTimeViewController.m */; };
 		18D5FA4B1DEDD7940062AACA /* XYShowTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5FA121DEDD7930062AACA /* XYShowTipView.m */; };
-		18D5FA4E1DEDD7A10062AACA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5FA4D1DEDD7A10062AACA /* AppDelegate.m */; };
 		18D5FA501DEDD83E0062AACA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D5FA4F1DEDD83E0062AACA /* AudioToolbox.framework */; };
 		18D5FA521DEDD84D0062AACA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D5FA511DEDD84D0062AACA /* AVFoundation.framework */; };
 		18D5FA541DEDD8560062AACA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D5FA531DEDD8560062AACA /* CoreGraphics.framework */; };
@@ -85,6 +86,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1817089D1DEDE79A00505582 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1817089E1DEDE79A00505582 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		181708A01DEDED9000505582 /* XYHomeLiveFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYHomeLiveFlowLayout.h; sourceTree = "<group>"; };
+		181708A11DEDED9000505582 /* XYHomeLiveFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYHomeLiveFlowLayout.m; sourceTree = "<group>"; };
 		18D5F9541DEDD32E0062AACA /* MiaoLive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoLive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18D5F9581DEDD32E0062AACA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		18D5F9631DEDD32E0062AACA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -201,8 +206,6 @@
 		18D5FA0F1DEDD7930062AACA /* XYShowTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYShowTimeViewController.m; sourceTree = "<group>"; };
 		18D5FA111DEDD7930062AACA /* XYShowTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYShowTipView.h; sourceTree = "<group>"; };
 		18D5FA121DEDD7930062AACA /* XYShowTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYShowTipView.m; sourceTree = "<group>"; };
-		18D5FA4C1DEDD7A10062AACA /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		18D5FA4D1DEDD7A10062AACA /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		18D5FA4F1DEDD83E0062AACA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		18D5FA511DEDD84D0062AACA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		18D5FA531DEDD8560062AACA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -268,8 +271,6 @@
 		18D5F9561DEDD32E0062AACA /* MiaoLive */ = {
 			isa = PBXGroup;
 			children = (
-				18D5FA4C1DEDD7A10062AACA /* AppDelegate.h */,
-				18D5FA4D1DEDD7A10062AACA /* AppDelegate.m */,
 				18D5F9701DEDD7930062AACA /* Classes */,
 				18D5F9631DEDD32E0062AACA /* Assets.xcassets */,
 				18D5F96E1DEDD6DB0062AACA /* Info.plist */,
@@ -312,26 +313,27 @@
 		18D5F9721DEDD7930062AACA /* ChildVC */ = {
 			isa = PBXGroup;
 			children = (
-				18D5F9731DEDD7930062AACA /* Hot */,
+				18D5F9731DEDD7930062AACA /* HotLiving */,
 				18D5F9761DEDD7930062AACA /* Living */,
 				18D5F9831DEDD7930062AACA /* MyOnlineFriendsList */,
-				18D5F9861DEDD7930062AACA /* NetRed */,
+				18D5F9861DEDD7930062AACA /* NetRedLiving */,
 				18D5F9891DEDD7930062AACA /* New */,
-				18D5F9931DEDD7930062AACA /* Official */,
-				18D5F9961DEDD7930062AACA /* Overseas */,
-				18D5F9991DEDD7930062AACA /* Same City */,
-				18D5F99C1DEDD7930062AACA /* Sign */,
+				18D5F9931DEDD7930062AACA /* OfficialLiving */,
+				18D5F9961DEDD7930062AACA /* OverseasLiving */,
+				18D5F9991DEDD7930062AACA /* Same CityLiving */,
+				18D5F99C1DEDD7930062AACA /* SignLiving */,
 				18D5F9A01DEDD7930062AACA /* Web */,
 			);
 			path = ChildVC;
 			sourceTree = "<group>";
 		};
-		18D5F9731DEDD7930062AACA /* Hot */ = {
+		18D5F9731DEDD7930062AACA /* HotLiving */ = {
 			isa = PBXGroup;
 			children = (
 				18D5F9741DEDD7930062AACA /* XYHotViewController.h */,
 				18D5F9751DEDD7930062AACA /* XYHotViewController.m */,
 			);
+			name = HotLiving;
 			path = Hot;
 			sourceTree = "<group>";
 		};
@@ -350,6 +352,8 @@
 			children = (
 				18D5F9781DEDD7930062AACA /* XYHomeLiveController.h */,
 				18D5F9791DEDD7930062AACA /* XYHomeLiveController.m */,
+				181708A01DEDED9000505582 /* XYHomeLiveFlowLayout.h */,
+				181708A11DEDED9000505582 /* XYHomeLiveFlowLayout.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -384,12 +388,13 @@
 			path = MyOnlineFriendsList;
 			sourceTree = "<group>";
 		};
-		18D5F9861DEDD7930062AACA /* NetRed */ = {
+		18D5F9861DEDD7930062AACA /* NetRedLiving */ = {
 			isa = PBXGroup;
 			children = (
 				18D5F9871DEDD7930062AACA /* XYNetRedViewController.h */,
 				18D5F9881DEDD7930062AACA /* XYNetRedViewController.m */,
 			);
+			name = NetRedLiving;
 			path = NetRed;
 			sourceTree = "<group>";
 		};
@@ -430,40 +435,44 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		18D5F9931DEDD7930062AACA /* Official */ = {
+		18D5F9931DEDD7930062AACA /* OfficialLiving */ = {
 			isa = PBXGroup;
 			children = (
 				18D5F9941DEDD7930062AACA /* XYOfficialViewController.h */,
 				18D5F9951DEDD7930062AACA /* XYOfficialViewController.m */,
 			);
+			name = OfficialLiving;
 			path = Official;
 			sourceTree = "<group>";
 		};
-		18D5F9961DEDD7930062AACA /* Overseas */ = {
+		18D5F9961DEDD7930062AACA /* OverseasLiving */ = {
 			isa = PBXGroup;
 			children = (
 				18D5F9971DEDD7930062AACA /* XYOverseasViewController.h */,
 				18D5F9981DEDD7930062AACA /* XYOverseasViewController.m */,
 			);
+			name = OverseasLiving;
 			path = Overseas;
 			sourceTree = "<group>";
 		};
-		18D5F9991DEDD7930062AACA /* Same City */ = {
+		18D5F9991DEDD7930062AACA /* Same CityLiving */ = {
 			isa = PBXGroup;
 			children = (
 				18D5F99A1DEDD7930062AACA /* XYSameCityViewController.h */,
 				18D5F99B1DEDD7930062AACA /* XYSameCityViewController.m */,
 			);
+			name = "Same CityLiving";
 			path = "Same City";
 			sourceTree = "<group>";
 		};
-		18D5F99C1DEDD7930062AACA /* Sign */ = {
+		18D5F99C1DEDD7930062AACA /* SignLiving */ = {
 			isa = PBXGroup;
 			children = (
 				18D5F99D1DEDD7930062AACA /* ViewController */,
 				18D5F99E1DEDD7930062AACA /* XYSignViewController.h */,
 				18D5F99F1DEDD7930062AACA /* XYSignViewController.m */,
 			);
+			name = SignLiving;
 			path = Sign;
 			sourceTree = "<group>";
 		};
@@ -595,6 +604,8 @@
 		18D5F9CD1DEDD7930062AACA /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				1817089D1DEDE79A00505582 /* AppDelegate.h */,
+				1817089E1DEDE79A00505582 /* AppDelegate.m */,
 				18D5F9CE1DEDD7930062AACA /* XYMainViewController.h */,
 				18D5F9CF1DEDD7930062AACA /* XYMainViewController.m */,
 				18D5F9D01DEDD7930062AACA /* XYNavigationController.h */,
@@ -980,7 +991,6 @@
 				18D5FA251DEDD7940062AACA /* XYLiveItem.m in Sources */,
 				18D5FA311DEDD7940062AACA /* XYLoginViewController.m in Sources */,
 				18D5FA351DEDD7940062AACA /* UIDevice+XYExtension.m in Sources */,
-				18D5FA4E1DEDD7A10062AACA /* AppDelegate.m in Sources */,
 				18D5FA2A1DEDD7940062AACA /* XYLiveFlowLayout.m in Sources */,
 				18D5FA411DEDD7940062AACA /* XYNetworkTool.m in Sources */,
 				18D5F9591DEDD32E0062AACA /* main.m in Sources */,
@@ -988,6 +998,7 @@
 				18D5FA491DEDD7940062AACA /* XYSettingViewController.m in Sources */,
 				18D5FA1E1DEDD7940062AACA /* XYOfficialViewController.m in Sources */,
 				18D5FA1B1DEDD7940062AACA /* XYNewLiveController.m in Sources */,
+				181708A21DEDED9000505582 /* XYHomeLiveFlowLayout.m in Sources */,
 				18D5FA291DEDD7940062AACA /* XYRoomLiveController.m in Sources */,
 				18D5FA3E1DEDD7940062AACA /* XYConst.m in Sources */,
 				18D5FA341DEDD7940062AACA /* XYNavigationController.m in Sources */,
@@ -998,6 +1009,7 @@
 				18D5FA1D1DEDD7940062AACA /* XYNewLiveCell.m in Sources */,
 				18D5FA331DEDD7940062AACA /* XYMainViewController.m in Sources */,
 				18D5FA241DEDD7940062AACA /* XYHomeViewController.m in Sources */,
+				1817089F1DEDE79A00505582 /* AppDelegate.m in Sources */,
 				18D5FA141DEDD7940062AACA /* XYHomeLiveController.m in Sources */,
 				18D5FA451DEDD7940062AACA /* XYEditProfileController.m in Sources */,
 				18D5FA371DEDD7940062AACA /* UIViewController+XYHUD.m in Sources */,

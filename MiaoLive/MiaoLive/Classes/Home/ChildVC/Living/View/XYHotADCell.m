@@ -38,8 +38,8 @@
     [view setImageArray:imageURLs];
     view.time = 2.0;
     view.delegate = self;
-    view.frame = self.contentView.bounds;
-    [self.contentView addSubview:view];
+    view.frame = self.bounds;
+    [self addSubview:view];
 }
 
 #pragma mark - XRCarouselViewDelegate

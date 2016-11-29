@@ -89,7 +89,11 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"head_crown_24x24"] style:UIBarButtonItemStyleDone target:self action:@selector(rankCrown)];
     UIButton *titleView = [[UIButton alloc] init];
     [titleView setTitle:@"广场" forState:UIControlStateNormal];
+    [titleView setImage:[UIImage imageNamed:@"title"] forState:UIControlStateNormal];
+    [titleView setImage:[UIImage imageNamed:@"title_selected"] forState:UIControlStateSelected];
     [titleView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [titleView sizeToFit];
+    [titleView addTarget:self action:@selector(changeShowType:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.titleView = titleView;
 }
 
@@ -99,6 +103,12 @@
     XYWebViewController *webViewController = [[XYWebViewController alloc] initWithURL:[NSURL URLWithString:@"http://live.9158.com/Rank/WeekRank?Random=10"]];
     webViewController.title = @"排行";
     [self.navigationController pushViewController:webViewController animated:YES];
+}
+
+// 更改显示的模式: 有两种模式(大图模式和小图模式)
+- (void)changeShowType:(UIButton *)btn {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:XYChangeShowLiveTypeNotification object:nil];
 }
 
 #pragma mark - 添加所有的子控制器
