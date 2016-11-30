@@ -88,6 +88,7 @@ static NSString *const cellReuseIdentifier = @"XYProfileViewControllerCell";
 }
 
 #pragma mark - Actions 
+// 手势的目地：拖动headerView时，让tableView也跟随滚动
 - (void)panGesture:(UIPanGestureRecognizer *)pan {
     
     // 获取手指所在的位置Y
@@ -167,7 +168,7 @@ static NSString *const cellReuseIdentifier = @"XYProfileViewControllerCell";
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     
-    return UIStatusBarStyleLightContent;
+    return UIStatusBarStyleDefault;
 }
 
 - (void)dealloc {

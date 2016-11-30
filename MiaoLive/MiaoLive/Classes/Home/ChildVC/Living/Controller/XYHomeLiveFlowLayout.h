@@ -10,6 +10,6 @@
 
 @interface XYHomeLiveFlowLayout : UICollectionViewFlowLayout
 
-/** item的列数 默认一列 */
+/** item的列数 默认一列, 此属性主要用于控制collectionViewCell的大小 */
 @property (nonatomic, assign) NSInteger columnNumber;
 @end

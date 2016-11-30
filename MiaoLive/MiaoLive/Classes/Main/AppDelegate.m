@@ -10,6 +10,7 @@
 #import "XYLoginViewController.h"
 #import "Reachability.h"
 #import "XYNetworkTool.h"
+#import "XYDBManager.h"
 
 @interface AppDelegate () {
 
@@ -31,6 +32,9 @@
     [self.window makeKeyAndVisible];
     
     [self checkNetworkstate];
+    
+    // 打开数据库
+    [[XYDBManager shareManager] openDataBase:@"lives.sqlite"];
     
     return YES;
 }

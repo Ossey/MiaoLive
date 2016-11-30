@@ -37,9 +37,8 @@
 #pragma mark - Lazy Loading
 - (XYMenuView *)menuView {
     if (_menuView == nil) {
-//        _menuView = [XYMenuView menuViewToSuperView:self.coverView];
-        _menuView = [XYMenuView menuViewToSuperView:xyApp.keyWindow];
-        _menuView.menuViewStyle = XYMenuViewStyleVertical;
+        _menuView = [XYMenuView menuViewToSuperView:xyApp.keyWindow contentHeight:200 animationOrientation:0 style:1];
+        
         [_menuView setItemBackGroundColor:[UIColor clearColor] titleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         __weak typeof(self) weakSelf = self;
         [_menuView setDismissCompletionBlock:^{

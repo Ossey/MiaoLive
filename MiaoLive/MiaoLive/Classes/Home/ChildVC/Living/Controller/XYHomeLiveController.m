@@ -18,7 +18,9 @@
 #import "XYRoomLiveController.h"
 #import "XYProfileNavigationController.h"
 #import "XYHomeLiveFlowLayout.h"
-#import "XYMenuView.h"
+#import "XYHomeMenuView.h"
+#import "XYHotLivelViewSmalCell.h"
+#import "XYDBManager.h"
 
 /**
  根据青花瓷抓取第一次进入此页面的GET请求:@"http://live.9158.com/Fans/GetHotLive?page=1
@@ -26,21 +28,22 @@
  */
 static NSString *const cellReusableIdentifier = @"XYHotViewController";
 static NSString *const adCellReusableIdentifier = @"XYHotADCell";
+static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 
 @interface XYHomeLiveController () 
 /** 当前页 */
 @property (nonatomic, assign) NSInteger currentPage;
 /** 最热直播数据模型数组 */
-@property (nonatomic, strong) NSMutableArray *lives;
+@property (nonatomic, strong) NSMutableArray<XYLiveItem *> *lives;
 /** 广告数据模型数组 */
-@property (nonatomic, strong) NSMutableArray *topADS;
+@property (nonatomic, strong) NSMutableArray<XYTopADItem *> *topADS;
 /** 请求直播数据的urlStr */
-@property (nonatomic, strong) NSString *loadLiveURLStr; // 请求
+@property (nonatomic, strong) NSString *loadLiveURLStr;
 /** 请求直播数据的字段 */
-@property (nonatomic, strong) NSMutableDictionary *loadLiveParameters; // 请求
+@property (nonatomic, strong) NSMutableDictionary *loadLiveParameters;
 @property (nonatomic, weak) UICollectionView *collectionView;
-@property (nonatomic, weak) XYHomeLiveFlowLayout *flowLayout;
-//@property (nonatomic, weak) UIView *showStyleView;
+@property (nonatomic, strong) XYHomeLiveFlowLayout *flowLayout;
+
 @end
 
 @implementation XYHomeLiveController
@@ -113,6 +116,12 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
     [self addobserver];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+
+    [super viewWillDisappear:animated];
+    [self.collectionView.mj_header endRefreshing];
+    [self.collectionView.mj_footer endRefreshing];
+}
 
 - (void)setup {
     
@@ -121,12 +130,13 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
     self.collectionView.backgroundColor = [UIColor whiteColor]; 
     
     [self.collectionView registerNib:[UINib nibWithNibName:@"XYHotLiveCell" bundle:nil] forCellWithReuseIdentifier:cellReusableIdentifier];
+    [self.collectionView registerNib:[UINib nibWithNibName:@"XYHotLivelViewSmalCell" bundle:nil] forCellWithReuseIdentifier:smallCellReusableIdentifier];
     
     // 添加collectionView的头部视图
     [self.collectionView registerClass:[XYHotADCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:adCellReusableIdentifier];
     
+    self.currentPage = 1;
     self.collectionView.mj_header = [XYRefreshGifHeader headerWithRefreshingBlock:^{
-        
         self.currentPage = 1;
         // 请求最热直播数据
         [self getHotLiveList];
@@ -141,22 +151,34 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
     
     [self.collectionView.mj_header beginRefreshing];
 
-    
 }
 
 - (void)addobserver {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showLiveStyle) name:XYChangeShowLiveTypeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showLiveStyle:) name:XYChangeShowLiveTypeNotification object:nil];
 }
 
-- (void)showLiveStyle {
+- (void)showLiveStyle:(NSNotification *)note {
 
-    XYMenuView *menuView = [XYMenuView menuViewToSuperView:self.view scrollViewHeight:40 animationOrientation:1 menViewStyle:1];
-
-    menuView.maskAlpha = 0.3;
+    // 获取导航titleView的按钮
+    UIButton *btn = note.object;
+    
+    XYHomeMenuView *menuView = [XYHomeMenuView menuViewToSuperView:self.view];
+    
+    [menuView setDismissCompletionBlock:^{
+        btn.selected = NO;
+        
+    }];
+    
+    if (btn.isSelected == 0 ) {
+        [menuView dismissMenuView:^{
+            
+        }];
+        return;
+    }
     
     [menuView showMenuView];
-    
-    [menuView setMenuViewClickBlock:^(XYMenuViewBtnType type) {
+
+    [menuView setMenuViewClickBlock:^(XYHomeMenuViewBtnType type) {
         
         if (type == 0) {
             self.flowLayout.columnNumber = 1;
@@ -166,6 +188,8 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
         }
     }];
     
+ 
+    
 }
 
 #pragma mark - 数据请求
@@ -173,7 +197,7 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
 - (void)getTopAD {
     
     // 10秒后再加载请求banner数据
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSString *urlStr = [xyBaseURLStr stringByAppendingPathComponent:@"Living/GetAD"];
         NSDictionary *parameters = @{@"tabid": @1};
         [[XYNetworkTool shareNetWork] GET:urlStr parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -186,11 +210,12 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
                     [self.collectionView reloadData];
                 }
             } else {
-                [self showInfo:@"网络异常"];
+                
+                [self xy_showMessage:@"网络异常, 请尝试刷新"];
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"%@", error);
-            [self showInfo:@"网络异常,请重新加载"];
+            [self xy_showMessage:@"网络异常, 请尝试刷新"];
         }];
         
     });
@@ -201,61 +226,165 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
 - (void)getHotLiveList {
   
     [[XYNetworkTool shareNetWork] GET:self.loadLiveURLStr parameters:self.loadLiveParameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSDictionary *_Nullable responseObject) {
-        [self.collectionView.mj_header endRefreshing];
-        [self.collectionView.mj_footer endRefreshing];
-        
-        // 转换模型
-        NSMutableArray *resultArray = [NSMutableArray array];
-        
-        // 注意:在获取服务器返回字段list对应数据时， 需要先判断服务器返回的msg字段的值为success才解析，因为success时data字段才有值，不然为空字符串，转模型会奔溃
-        if ([responseObject[@"msg"] isEqualToString:@"success"]) {
-
-            for (id obj in responseObject[@"data"][@"list"]) {
-                if ([obj isKindOfClass:[NSDictionary class]]) {
-                    XYLiveItem *item = [XYLiveItem LiveItemWithDict:obj];
-                    [resultArray addObject:item];
-                }
-            }
- 
-        }
-        
-        if (![self isEmptyArray:resultArray]) {
-            [self.lives addObjectsFromArray:resultArray];
-            [self.collectionView reloadData];
-        } else {
-            [self xy_showMessage:@"暂时没有更多最新数据"];
-            // 恢复当前页
-            self.currentPage--;
-        }
+        // 正常应该先获取当前登录用户ID，如当前无用户ID，则用户未登陆，就不需要加载微博数据，但是我未做登录，暂时跳过
+        // 从后台请求数据
+        [self loadLivesFromNetwork:responseObject];
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@", error);
+        self.currentPage--;
+        [self xy_showMessage:@"网络异常, 请尝试刷新"];
+        
+        // 网络错误就读取本地数据
+        [self loadLivesFromDB];
+
         [self.collectionView.mj_header endRefreshing];
         [self.collectionView.mj_footer endRefreshing];
-        self.currentPage--;
-        [self showInfo:@"网络异常, 请尝试刷新"];
     }];
 }
 
 
+// 从服务器请求数据
+- (void)loadLivesFromNetwork:(NSDictionary *)responseObject {
+
+    NSLog(@"%@", responseObject);
+    
+    // 转换模型
+    NSMutableArray *resultArray = [NSMutableArray array];
+    
+    // 注意:在获取服务器返回字段list对应数据时， 需要先判断服务器返回的msg字段的值为success才解析，因为success时data字段才有值，不然为空字符串，转模型会奔溃
+    if ([responseObject[@"msg"] isEqualToString:@"success"]) {
+        
+        for (id obj in responseObject[@"data"][@"list"]) {
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                XYLiveItem *item = [XYLiveItem LiveItemWithDict:obj];
+                [resultArray addObject:item];
+            }
+        }
+        // 请求数据完成后，将数据缓存到数据库
+        [self cacheLives:responseObject[@"data"][@"list"]];
+    }
+    
+    if (![self isEmptyArray:resultArray]) {
+        if (self.currentPage == 1) { // 当currentPage为1时是下拉刷新，此时会导致重复添加数据，所以每次下拉刷新时移除以前的数据
+            [self.lives removeAllObjects];
+        }
+        [self.lives addObjectsFromArray:resultArray];
+        [self.collectionView reloadData];
+    } else {
+        [self xy_showMessage:@"暂时没有更多最新数据"];
+        // 恢复当前页
+        self.currentPage--;
+    }
+    
+    [self.collectionView.mj_header endRefreshing];
+    [self.collectionView.mj_footer endRefreshing];
+    
+   
+
+}
+
+// 请求数据完成后，将数据缓存到数据库
+- (void)cacheLives:(NSArray *)resultArray {
+    
+    
+    // 遍历数据数组，取出每一个字典，转换为NSString保存到数据库
+    for (id Objc in resultArray) {
+        // 将每一个字典转换为字符串
+        NSError *error;
+        NSData *objData = [NSJSONSerialization dataWithJSONObject:Objc options:NSJSONWritingPrettyPrinted error:&error];
+        NSString *objStr = [[NSString alloc] initWithData:objData encoding:NSUTF8StringEncoding];
+        
+        // 执行SQL插入语句
+        NSString *insertSql = @"insert into t_lives(livesText) values (?)";
+        NSLog(@"%@", Objc[@"pos"]);
+        // 4.执行sql语句
+        [[XYDBManager shareManager].dbQueue inDatabase:^(FMDatabase *db) {
+            if ([db executeUpdate:insertSql withArgumentsInArray:@[objStr]]) {
+                [self xy_showMessage:@"[sql插入]语句执行成功"];
+            } else {
+                [self xy_showMessage:@"[sql插入]语句执行失败"];
+            }
+        }];
+
+    }
+}
+
+- (void)loadLivesFromDB {
+    
+    // 定义一个临时模型数组，用于将本地数据库查询到的数据添加到里面的
+    NSMutableArray<XYLiveItem *> *tempArrayM = [NSMutableArray array];
+    // 请求失败时查询缓存的本地数据库
+    // 执行查询语句
+    NSString *querySql = [NSString stringWithFormat:@"SELECT *FROM t_lives WHERE id > 0"];
+    [[XYDBManager shareManager].dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:querySql withArgumentsInArray:nil];
+        
+        // 遍历查询结果
+        while (resultSet.next) {
+            // 获取本地数据库中的livesText字段对应的数据
+            NSString *liveText = [resultSet stringForColumn:@"livesText"];
+            
+            // 将字符串转换为字典
+            NSError *error;
+            NSData *liveData = [liveText dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *live = [NSJSONSerialization JSONObjectWithData:liveData options:NSJSONReadingMutableContainers error:&error];
+            if (error) {
+                NSLog(@"%@", error.localizedDescription);
+            }
+            // 将 字典 转换为 模型 拼接到 临时模型数组 中
+            XYLiveItem *item = [XYLiveItem LiveItemWithDict:live];
+            [tempArrayM addObject:item];
+            
+            // 移除当前数据源中所有模型(主要是为了防止本地数据库中加载的数据与数据源中的相同了)
+            
+            self.lives = tempArrayM;
+            [self.collectionView reloadData];
+        }
+        
+    }];
+    
+}
 
 #pragma mark - collectionView view data source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    // 加1是因为第一行设置为banner了
-//    return self.topADS.count ? self.lives.count + 1 : self.lives.count;
+    
     return self.lives.count;
 }
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
-
     
-    XYHotLiveCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellReusableIdentifier forIndexPath:indexPath];
-    if (self.lives.count) {
-
-        cell.liveItem = self.lives[indexPath.row];
+    // 根据banner的模型数组，动态修改collectionView头部视图的高度
+    if (self.topADS.count > 0) {
+        self.flowLayout.headerReferenceSize = CGSizeMake(xyScreenW, 100);
+        
+    } else {
+        self.flowLayout.headerReferenceSize = CGSizeZero;
     }
-    return cell;
+    
+    
+    // 根据flowLayout.columnNumber属性，决定显示哪种类型的cell
+    if (self.flowLayout.columnNumber == 1) {
+        XYHotLiveCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellReusableIdentifier forIndexPath:indexPath];
+        
+        if (self.lives.count) {
+            
+            cell.liveItem = self.lives[indexPath.row];
+        }
+        return cell;
+        
+    } else if (self.flowLayout.columnNumber == 2) {
+        XYHotLivelViewSmalCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:smallCellReusableIdentifier forIndexPath:indexPath];
+        
+        if (self.lives.count) {
+            
+            cell.liveItem = self.lives[indexPath.row];
+        }
+        return cell;
+
+    }
+    return nil;
 }
 
 
@@ -268,13 +397,14 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-//  返回头视图
+//  返回collectionView头部视图: 需要注意的是当flowLayout.headerReferenceSize的值为CGSizeZero时，不会调用此方法创建头视图
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    //如果是头视图
+    
+       //如果是头视图
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         XYHotADCell *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:adCellReusableIdentifier forIndexPath:indexPath];
-    
+
         header.adItems = self.topADS;
         return header;
     }

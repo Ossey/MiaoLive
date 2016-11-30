@@ -33,7 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *separatorColor;
 /** 蒙板的透明度 , 默认为0.08*/
 @property (nonatomic, assign) CGFloat maskAlpha;
-@property (nonatomic, assign) XYMenuViewStyle menuViewStyle;
 @property (nonatomic, strong) UIColor *itemBackGroundColor;
 @property (nonatomic, strong) UIColor *itemTitleColor;
 
@@ -57,7 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @return  XYMenuView实例化的对象
  */
 + (instancetype)menuViewToSuperView:(UIView *)superView;
-+ (instancetype)menuViewToSuperView:(UIView *)superView scrollViewHeight:(CGFloat)height animationOrientation:(XYMenuViewAnimationOrientation)orientation menViewStyle:(XYMenuViewStyle)style;
++ (instancetype)menuViewToSuperView:(UIView *)superView contentHeight:(CGFloat)height animationOrientation:(XYMenuViewAnimationOrientation)orientation style:(XYMenuViewStyle)style;
+- (instancetype)initWithContentHeight:(CGFloat)height style:(XYMenuViewStyle)style orientation:(XYMenuViewAnimationOrientation)orientation NS_DESIGNATED_INITIALIZER;
 
 - (void)showMenuView;
 - (void)dismissMenuView;

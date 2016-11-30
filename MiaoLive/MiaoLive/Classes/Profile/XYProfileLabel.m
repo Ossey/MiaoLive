@@ -10,12 +10,13 @@
 
 @implementation XYProfileLabel
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (void)awakeFromNib {
+
+    [super awakeFromNib];
+    
+    self.layer.shadowRadius = 2;
+    self.layer.shadowOpacity = 0.5;
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
 }
-*/
 
 @end

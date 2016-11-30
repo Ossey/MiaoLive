@@ -14,6 +14,12 @@
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 @property (weak, nonatomic) UIVisualEffectView *effectView;
 @property (weak, nonatomic) IBOutlet UIImageView *iconView;
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *signaturesLabel;
+@property (weak, nonatomic) IBOutlet UILabel *useridxLabel;
+@property (weak, nonatomic) IBOutlet UIButton *followNumberLabel;
+@property (weak, nonatomic) IBOutlet UIButton *fansNumberLabel;
+@property (weak, nonatomic) IBOutlet UIButton *showLiveDuration;
 
 @end
 @implementation XYProfileHeaderView
@@ -21,6 +27,20 @@
 - (void)awakeFromNib {
 
     [super awakeFromNib];
+    
+    self.followNumberLabel.layer.shadowRadius = 2;
+    self.followNumberLabel.layer.shadowOpacity = 0.5;
+    self.followNumberLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    
+    self.fansNumberLabel.layer.shadowRadius = 2;
+    self.fansNumberLabel.layer.shadowOpacity = 0.5;
+    self.fansNumberLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    
+    self.showLiveDuration.layer.shadowRadius = 2;
+    self.showLiveDuration.layer.shadowOpacity = 0.5;
+    self.showLiveDuration.layer.shadowColor = [UIColor blackColor].CGColor;
+    
+  
     
     NSURL *bgURL = [NSURL URLWithString:@"http://liveimg.9158.com/default.png"];
     NSString *bgPath = [xyDocumentPath stringByAppendingPathComponent:bgURL.lastPathComponent];
@@ -35,7 +55,9 @@
     }];
     NSData *bgImageData = [NSData dataWithContentsOfFile:bgPath];
     UIImage *bgImage = [UIImage imageWithData:bgImageData];
-    self.backgroundImageView.image = [UIImage filterWith:bgImage andRadius:30];
+    self.backgroundImageView.image = [UIImage filterWith:bgImage andRadius:20];
+    self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.backgroundImageView setClipsToBounds:YES];
     self.iconView.image = bgImage;
     
     self.backgroundImageView.userInteractionEnabled = YES;

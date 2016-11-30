@@ -32,7 +32,6 @@
 		18D5FA241DEDD7940062AACA /* XYHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9A81DEDD7930062AACA /* XYHomeViewController.m */; };
 		18D5FA251DEDD7940062AACA /* XYLiveItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9AB1DEDD7930062AACA /* XYLiveItem.m */; };
 		18D5FA261DEDD7940062AACA /* XYLiveUserItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9AD1DEDD7930062AACA /* XYLiveUserItem.m */; };
-		18D5FA271DEDD7940062AACA /* XYHomeTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9B01DEDD7930062AACA /* XYHomeTitleView.m */; };
 		18D5FA281DEDD7940062AACA /* XYContributionListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9B41DEDD7930062AACA /* XYContributionListController.m */; };
 		18D5FA291DEDD7940062AACA /* XYRoomLiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9B61DEDD7930062AACA /* XYRoomLiveController.m */; };
 		18D5FA2A1DEDD7940062AACA /* XYLiveFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9B91DEDD7930062AACA /* XYLiveFlowLayout.m */; };
@@ -82,6 +81,12 @@
 		18D5FA641DEDD8A80062AACA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D5FA631DEDD8A80062AACA /* QuartzCore.framework */; };
 		18D5FA661DEDD8B10062AACA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D5FA651DEDD8B10062AACA /* UIKit.framework */; };
 		18D5FA681DEDD8B80062AACA /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D5FA671DEDD8B80062AACA /* VideoToolbox.framework */; };
+		18ED6BFB1DEE8A100012B48C /* XYHotLivelViewSmalCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED6BF91DEE8A100012B48C /* XYHotLivelViewSmalCell.m */; };
+		18ED6BFC1DEE8A100012B48C /* XYHotLivelViewSmalCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18ED6BFA1DEE8A100012B48C /* XYHotLivelViewSmalCell.xib */; };
+		18ED6BFF1DEEA31F0012B48C /* XYHomeMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED6BFE1DEEA31F0012B48C /* XYHomeMenuView.m */; };
+		18ED6C021DEEB6ED0012B48C /* XYHomeTitleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED6C011DEEB6ED0012B48C /* XYHomeTitleButton.m */; };
+		18ED6C051DEEBF5B0012B48C /* XYProfileLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED6C041DEEBF5B0012B48C /* XYProfileLabel.m */; };
+		18ED6C091DEF160E0012B48C /* XYDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED6C081DEF160E0012B48C /* XYDBManager.m */; };
 		BECC6D53E6CA65E92514FCAD /* libPods-MiaoLive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1E5A0006A70FE586AE0B93D /* libPods-MiaoLive.a */; };
 /* End PBXBuildFile section */
 
@@ -133,8 +138,6 @@
 		18D5F9AB1DEDD7930062AACA /* XYLiveItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYLiveItem.m; sourceTree = "<group>"; };
 		18D5F9AC1DEDD7930062AACA /* XYLiveUserItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYLiveUserItem.h; sourceTree = "<group>"; };
 		18D5F9AD1DEDD7930062AACA /* XYLiveUserItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYLiveUserItem.m; sourceTree = "<group>"; };
-		18D5F9AF1DEDD7930062AACA /* XYHomeTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYHomeTitleView.h; sourceTree = "<group>"; };
-		18D5F9B01DEDD7930062AACA /* XYHomeTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYHomeTitleView.m; sourceTree = "<group>"; };
 		18D5F9B31DEDD7930062AACA /* XYContributionListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYContributionListController.h; sourceTree = "<group>"; };
 		18D5F9B41DEDD7930062AACA /* XYContributionListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYContributionListController.m; sourceTree = "<group>"; };
 		18D5F9B51DEDD7930062AACA /* XYRoomLiveController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYRoomLiveController.h; sourceTree = "<group>"; };
@@ -219,6 +222,17 @@
 		18D5FA631DEDD8A80062AACA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		18D5FA651DEDD8B10062AACA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		18D5FA671DEDD8B80062AACA /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		18ED6BF81DEE8A100012B48C /* XYHotLivelViewSmalCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYHotLivelViewSmalCell.h; sourceTree = "<group>"; };
+		18ED6BF91DEE8A100012B48C /* XYHotLivelViewSmalCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYHotLivelViewSmalCell.m; sourceTree = "<group>"; };
+		18ED6BFA1DEE8A100012B48C /* XYHotLivelViewSmalCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XYHotLivelViewSmalCell.xib; sourceTree = "<group>"; };
+		18ED6BFD1DEEA31F0012B48C /* XYHomeMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYHomeMenuView.h; sourceTree = "<group>"; };
+		18ED6BFE1DEEA31F0012B48C /* XYHomeMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYHomeMenuView.m; sourceTree = "<group>"; };
+		18ED6C001DEEB6ED0012B48C /* XYHomeTitleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYHomeTitleButton.h; sourceTree = "<group>"; };
+		18ED6C011DEEB6ED0012B48C /* XYHomeTitleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYHomeTitleButton.m; sourceTree = "<group>"; };
+		18ED6C031DEEBF5B0012B48C /* XYProfileLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYProfileLabel.h; sourceTree = "<group>"; };
+		18ED6C041DEEBF5B0012B48C /* XYProfileLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYProfileLabel.m; sourceTree = "<group>"; };
+		18ED6C071DEF160E0012B48C /* XYDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYDBManager.h; sourceTree = "<group>"; };
+		18ED6C081DEF160E0012B48C /* XYDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYDBManager.m; sourceTree = "<group>"; };
 		99DFFF6AE0BDA70885536852 /* Pods-MiaoLive.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoLive.release.xcconfig"; path = "Pods/Target Support Files/Pods-MiaoLive/Pods-MiaoLive.release.xcconfig"; sourceTree = "<group>"; };
 		B20CF5F6FA8D11010472A430 /* Pods-MiaoLive.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoLive.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MiaoLive/Pods-MiaoLive.debug.xcconfig"; sourceTree = "<group>"; };
 		D1E5A0006A70FE586AE0B93D /* libPods-MiaoLive.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MiaoLive.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -375,6 +389,11 @@
 				18D5F9801DEDD7930062AACA /* XYHotLiveCell.h */,
 				18D5F9811DEDD7930062AACA /* XYHotLiveCell.m */,
 				18D5F9821DEDD7930062AACA /* XYHotLiveCell.xib */,
+				18ED6BF81DEE8A100012B48C /* XYHotLivelViewSmalCell.h */,
+				18ED6BF91DEE8A100012B48C /* XYHotLivelViewSmalCell.m */,
+				18ED6BFA1DEE8A100012B48C /* XYHotLivelViewSmalCell.xib */,
+				18ED6BFD1DEEA31F0012B48C /* XYHomeMenuView.h */,
+				18ED6BFE1DEEA31F0012B48C /* XYHomeMenuView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -527,8 +546,8 @@
 		18D5F9AE1DEDD7930062AACA /* View */ = {
 			isa = PBXGroup;
 			children = (
-				18D5F9AF1DEDD7930062AACA /* XYHomeTitleView.h */,
-				18D5F9B01DEDD7930062AACA /* XYHomeTitleView.m */,
+				18ED6C001DEEB6ED0012B48C /* XYHomeTitleButton.h */,
+				18ED6C011DEEB6ED0012B48C /* XYHomeTitleButton.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -735,6 +754,7 @@
 		18D5F9F41DEDD7930062AACA /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				18ED6C061DEF14F20012B48C /* DB */,
 				18D5F9F51DEDD7930062AACA /* Network */,
 				18D5F9FA1DEDD7930062AACA /* Refresh */,
 			);
@@ -774,6 +794,8 @@
 				18D5FA091DEDD7930062AACA /* XYProfileViewController.m */,
 				18D5FA0A1DEDD7930062AACA /* XYSettingViewController.h */,
 				18D5FA0B1DEDD7930062AACA /* XYSettingViewController.m */,
+				18ED6C031DEEBF5B0012B48C /* XYProfileLabel.h */,
+				18ED6C041DEEBF5B0012B48C /* XYProfileLabel.m */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -814,6 +836,15 @@
 				18D5FA121DEDD7930062AACA /* XYShowTipView.m */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		18ED6C061DEF14F20012B48C /* DB */ = {
+			isa = PBXGroup;
+			children = (
+				18ED6C071DEF160E0012B48C /* XYDBManager.h */,
+				18ED6C081DEF160E0012B48C /* XYDBManager.m */,
+			);
+			path = DB;
 			sourceTree = "<group>";
 		};
 		A635237DB1A29F0EEDF083E2 /* Pods */ = {
@@ -911,6 +942,7 @@
 			files = (
 				18D5F9641DEDD32E0062AACA /* Assets.xcassets in Resources */,
 				18D5F96F1DEDD6DB0062AACA /* Info.plist in Resources */,
+				18ED6BFC1DEE8A100012B48C /* XYHotLivelViewSmalCell.xib in Resources */,
 				18D5FA471DEDD7940062AACA /* XYProfileHeaderView.xib in Resources */,
 				18D5FA181DEDD7940062AACA /* XYHotLiveCell.xib in Resources */,
 			);
@@ -984,13 +1016,13 @@
 				18D5FA441DEDD7940062AACA /* XYProfileNavigationController.m in Sources */,
 				18D5FA461DEDD7940062AACA /* XYProfileHeaderView.m in Sources */,
 				18D5FA321DEDD7940062AACA /* XYThirdPartyLoginView.m in Sources */,
-				18D5FA271DEDD7940062AACA /* XYHomeTitleView.m in Sources */,
 				18D5FA281DEDD7940062AACA /* XYContributionListController.m in Sources */,
 				18D5FA4B1DEDD7940062AACA /* XYShowTipView.m in Sources */,
 				18D5FA2B1DEDD7940062AACA /* NSSafeObject.m in Sources */,
 				18D5FA251DEDD7940062AACA /* XYLiveItem.m in Sources */,
 				18D5FA311DEDD7940062AACA /* XYLoginViewController.m in Sources */,
 				18D5FA351DEDD7940062AACA /* UIDevice+XYExtension.m in Sources */,
+				18ED6C021DEEB6ED0012B48C /* XYHomeTitleButton.m in Sources */,
 				18D5FA2A1DEDD7940062AACA /* XYLiveFlowLayout.m in Sources */,
 				18D5FA411DEDD7940062AACA /* XYNetworkTool.m in Sources */,
 				18D5F9591DEDD32E0062AACA /* main.m in Sources */,
@@ -1015,6 +1047,8 @@
 				18D5FA371DEDD7940062AACA /* UIViewController+XYHUD.m in Sources */,
 				18D5FA381DEDD7940062AACA /* NSObject+XYExtension.m in Sources */,
 				18D5FA161DEDD7940062AACA /* XYHotADCell.m in Sources */,
+				18ED6BFF1DEEA31F0012B48C /* XYHomeMenuView.m in Sources */,
+				18ED6C051DEEBF5B0012B48C /* XYProfileLabel.m in Sources */,
 				18D5FA1C1DEDD7940062AACA /* XYNewLiveFlowLayout.m in Sources */,
 				18D5FA401DEDD7940062AACA /* Reachability.m in Sources */,
 				18D5FA2E1DEDD7940062AACA /* XYLiveViewCell.m in Sources */,
@@ -1024,10 +1058,12 @@
 				18D5FA481DEDD7940062AACA /* XYProfileViewController.m in Sources */,
 				18D5FA3A1DEDD7940062AACA /* UIImage+XYExtension.m in Sources */,
 				18D5FA231DEDD7940062AACA /* XYHomeBaseController.m in Sources */,
+				18ED6BFB1DEE8A100012B48C /* XYHotLivelViewSmalCell.m in Sources */,
 				18D5FA131DEDD7940062AACA /* XYHotViewController.m in Sources */,
 				18D5FA1F1DEDD7940062AACA /* XYOverseasViewController.m in Sources */,
 				18D5FA221DEDD7940062AACA /* XYWebViewController.m in Sources */,
 				18D5FA211DEDD7940062AACA /* XYSignViewController.m in Sources */,
+				18ED6C091DEF160E0012B48C /* XYDBManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

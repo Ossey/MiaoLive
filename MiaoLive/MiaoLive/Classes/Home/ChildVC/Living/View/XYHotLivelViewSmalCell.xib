@@ -1,19 +1,87 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="XYHotLivelViewSmalCell">
-            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <rect key="frame" x="0.0" y="0.0" width="230" height="192"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                <rect key="frame" x="0.0" y="0.0" width="230" height="192"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NYa-Cg-gDf">
+                        <rect key="frame" x="0.0" y="0.0" width="230" height="192"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_live_43x22" translatesAutoresizingMaskIntoConstraints="NO" id="8de-JI-nd2">
+                        <rect key="frame" x="182" y="8" width="43" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="22" id="HAp-aU-2f2"/>
+                            <constraint firstAttribute="width" constant="43" id="WH6-iI-2rP"/>
+                        </constraints>
+                    </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ug-WP-GhL">
+                        <rect key="frame" x="5" y="5" width="83" height="28"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <state key="normal" title="家族名" backgroundImage="family_bg">
+                            <color key="titleColor" name="selectedKnobColor" catalog="System" colorSpace="catalog"/>
+                        </state>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="主播昵称" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XDe-bh-HzT">
+                        <rect key="frame" x="5" y="147" width="53.5" height="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="girl_star1_40x19" translatesAutoresizingMaskIntoConstraints="NO" id="Tvb-QU-yGF">
+                        <rect key="frame" x="5" y="168" width="40" height="19"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100人" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ps1-F9-maG">
+                        <rect key="frame" x="197" y="175" width="28" height="12"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
             </view>
+            <constraints>
+                <constraint firstItem="8de-JI-nd2" firstAttribute="centerY" secondItem="3ug-WP-GhL" secondAttribute="centerY" id="5b5-Mz-shG"/>
+                <constraint firstItem="Tvb-QU-yGF" firstAttribute="top" secondItem="XDe-bh-HzT" secondAttribute="bottom" constant="5" id="5wp-dv-cPj"/>
+                <constraint firstAttribute="trailing" secondItem="8de-JI-nd2" secondAttribute="trailing" constant="5" id="6AU-7N-v4c"/>
+                <constraint firstAttribute="bottom" secondItem="Ps1-F9-maG" secondAttribute="bottom" constant="5" id="8My-Io-mGu"/>
+                <constraint firstItem="NYa-Cg-gDf" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="8wf-uB-3D4"/>
+                <constraint firstItem="3ug-WP-GhL" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="AbK-wZ-sCs"/>
+                <constraint firstAttribute="trailing" secondItem="Ps1-F9-maG" secondAttribute="trailing" constant="5" id="Clq-gk-kj3"/>
+                <constraint firstItem="Tvb-QU-yGF" firstAttribute="leading" secondItem="3ug-WP-GhL" secondAttribute="leading" id="EIX-hA-JmO"/>
+                <constraint firstAttribute="bottom" secondItem="Tvb-QU-yGF" secondAttribute="bottom" constant="5" id="F0S-g1-kcn"/>
+                <constraint firstItem="NYa-Cg-gDf" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="OGu-Ou-jEF"/>
+                <constraint firstItem="3ug-WP-GhL" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="V9x-pD-b1Z"/>
+                <constraint firstAttribute="bottom" secondItem="NYa-Cg-gDf" secondAttribute="bottom" id="bCo-rz-ja8"/>
+                <constraint firstAttribute="trailing" secondItem="NYa-Cg-gDf" secondAttribute="trailing" id="oaW-fV-Cpv"/>
+                <constraint firstItem="XDe-bh-HzT" firstAttribute="leading" secondItem="3ug-WP-GhL" secondAttribute="leading" id="p5G-Ig-fgt"/>
+            </constraints>
+            <size key="customSize" width="230" height="192"/>
+            <connections>
+                <outlet property="bigPicView" destination="NYa-Cg-gDf" id="m0g-qD-6fo"/>
+                <outlet property="familyNameBtn" destination="3ug-WP-GhL" id="t5Y-Au-Q23"/>
+                <outlet property="nameLabel" destination="XDe-bh-HzT" id="6Jk-xn-8el"/>
+                <outlet property="starImageView" destination="Tvb-QU-yGF" id="pel-hb-41g"/>
+                <outlet property="watchNumberLabel" destination="Ps1-F9-maG" id="iKo-ga-IQp"/>
+            </connections>
+            <point key="canvasLocation" x="-12" y="-38"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="family_bg" width="83" height="28"/>
+        <image name="girl_star1_40x19" width="40" height="19"/>
+        <image name="home_live_43x22" width="43" height="22"/>
+    </resources>
 </document>

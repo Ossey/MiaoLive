@@ -7,18 +7,27 @@
 //
 
 #import "XYShowTimeViewController.h"
+#import <LFLiveKit.h>
 
-
-@interface XYShowTimeViewController ()
+@interface XYShowTimeViewController () <LFLiveSessionDelegate>
 
 @property (nonatomic, weak) UIButton *beautifulfaceBtn;
 @property (nonatomic, weak) UIButton *closeBtn;
 @property (nonatomic, weak) UIButton *cameraChangeBtn;
 @property (nonatomic, weak) UIButton *startShowBtn;
-
+@property (nonatomic, strong) LFLiveSession *session;
 @end
 
 @implementation XYShowTimeViewController
+
+- (LFLiveSession*)session {
+    if (!_session) {
+        _session = [[LFLiveSession alloc] initWithAudioConfiguration:[LFLiveAudioConfiguration defaultConfiguration] videoConfiguration:[LFLiveVideoConfiguration defaultConfiguration]];
+        _session.preView = self.view;
+        _session.delegate = self;
+    }
+    return _session;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,6 +35,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self setupUI];
 }
+
 
 - (void)setupUI {
     [UIButton xy_button:^(UIButton *btn) {
@@ -74,8 +84,15 @@
         [btn.layer setMasksToBounds:YES];
     } buttonClickCallBack:^(UIButton *btn) {
         // 开始直播
+//        [self startLive];
     }];
     
+}
+
+- (void)startLive {
+    LFLiveStreamInfo *streamInfo = [LFLiveStreamInfo new];
+    streamInfo.url = @"your server rtmp url";
+    [self.session startLive:streamInfo];
 }
 
 - (void)viewWillLayoutSubviews {

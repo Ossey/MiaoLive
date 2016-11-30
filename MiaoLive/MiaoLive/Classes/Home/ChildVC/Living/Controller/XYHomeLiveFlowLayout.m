@@ -21,7 +21,7 @@
     self.itemSize = CGSizeMake(wh, wh);
     self.minimumLineSpacing = padding;
     self.minimumInteritemSpacing = padding;
-    self.headerReferenceSize = CGSizeMake(xyScreenW, 100); // 设置collectionView头部视图的尺寸
+//    self.headerReferenceSize = CGSizeMake(xyScreenW, 100); // 设置collectionView头部视图的尺寸
     
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.showsHorizontalScrollIndicator = NO;

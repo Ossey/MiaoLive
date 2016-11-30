@@ -37,6 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger pos;
 /** 观看直播的用户数量 */
 @property (nonatomic, assign) NSInteger allnum;
+/** 家族名称 */
+@property (nonatomic, copy) NSString *familyName;
+/** 是否签约 */
+@property (nonatomic, assign) BOOL isSign;
+/** 级别 */
+@property (nonatomic, assign) NSInteger grade;
 
 /****************** 非服务器返回的数据 *******************************/
 /** starImage */

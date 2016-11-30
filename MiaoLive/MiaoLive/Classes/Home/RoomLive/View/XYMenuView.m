@@ -29,7 +29,7 @@
 @property (nonatomic, assign) XYMenuViewAnimationOrientation orientation;
 /** contentView的底部或顶部约束，具体根据 orientation 属性 确定是顶部还是底部*/
 @property (nonatomic, weak) NSLayoutConstraint *contentViewBotOrTop;
-
+@property (nonatomic, assign) XYMenuViewStyle menuViewStyle;
 
 @end
 
@@ -44,12 +44,12 @@
 
 #pragma mark - 对外公开的方法
 + (instancetype)menuViewToSuperView:(UIView *)superView {
-    return [self menuViewToSuperView:superView scrollViewHeight:0 animationOrientation:0 menViewStyle:0];
-}
-+ (instancetype)menuViewToSuperView:(UIView *)superView scrollViewHeight:(CGFloat)height animationOrientation:(XYMenuViewAnimationOrientation)orientation menViewStyle:(XYMenuViewStyle)style {
     
-    XYMenuView *menuView = [[self alloc] initWithScrollViewHeight:height menuViewStyle:style];
-    menuView.orientation = orientation;
+    return [self menuViewToSuperView:superView contentHeight:60 animationOrientation:0 style:0];
+}
++ (instancetype)menuViewToSuperView:(UIView *)superView contentHeight:(CGFloat)height animationOrientation:(XYMenuViewAnimationOrientation)orientation style:(XYMenuViewStyle)style {
+    
+    XYMenuView *menuView = [[self alloc] initWithContentHeight:height style:style orientation:orientation];
     
     if (CGRectGetHeight(superView.frame) < xyScreenH * 0.5 || CGRectGetHeight(superView.frame) <  xyScreenH * 0.5) {
         superView = xyApp.keyWindow;
@@ -66,11 +66,12 @@
         
         // 当有tabBar在显示时，让view的高度减去tabBar的高度，避免tabBar在上面挡住底部
         CGFloat margin;
-        if (xyApp.keyWindow.rootViewController.tabBarController.tabBar.hidden == NO) {
+        if (xyApp.keyWindow.rootViewController.tabBarController.tabBar.hidden == YES) {
             margin = -xyTabBarH;
         } else {
             margin = 0;
         }
+        
         [superView addConstraint:[NSLayoutConstraint constraintWithItem:menuView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:superView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:margin]];
         
         NSLayoutConstraint *menuViewTopConstr = [NSLayoutConstraint constraintWithItem:menuView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
@@ -84,23 +85,36 @@
     return menuView;
 }
 
+#pragma mark - 初始化方法
+- (instancetype)initWithContentHeight:(CGFloat)height style:(XYMenuViewStyle)style orientation:(XYMenuViewAnimationOrientation)orientation {
+    
+    if (self = [super initWithFrame:CGRectZero]) {
+        
+        self.scrollViewHeight = height;
+        self.orientation = orientation;
+        self.menuViewStyle = style;
+        [self reloadSubView];
+        
+    }
+    return self;
+}
+
 // 隐藏menuView，并在隐藏动画执行完毕后回调block
 - (void)dismissMenuView:(void(^)())block {
     
     UIView *superView = self.superview;
     
     if (superView) {
-//        self.coverView.hidden = YES;
         
-        // 更新menuView的约束到父控件view的最底部，并隐藏
-//        _selfTopConstr.priority = 800; // 约束优先级
         self.contentViewBotOrTop.constant = 0;
         
         [UIView animateWithDuration:0.2 animations:^{
             [superView layoutIfNeeded];
             
         } completion:^(BOOL finished) {
+//            [self removeFromSuperview];
             self.hidden = YES;
+            
             if (block) {
                 block();
                 
@@ -119,12 +133,12 @@
 - (void)showMenuView:(void(^)())block {
     UIView *superView = self.superview;
     if (superView) {
-        
         self.hidden = NO;
-        
-//        self.selfTopConstr.constant = 0.0;
+        // 先强制更新下
+        [self.superview  layoutIfNeeded];
+    
         if (self.orientation == 0) {
-            NSLog(@"height==%f", self.contentView.frame.size.height);
+//            NSLog(@"height==%f", self.contentView.frame.size.height);
             self.contentViewBotOrTop.constant = -CGRectGetHeight(self.contentView.frame);
         } else {
             self.contentViewBotOrTop.constant = CGRectGetHeight(self.contentView.frame);
@@ -134,7 +148,7 @@
             [self layoutIfNeeded];
             
         } completion:^(BOOL finished) {
-            self.coverView.hidden = NO;
+            
             if (block) {
                 block();
             }
@@ -160,16 +174,7 @@
     [self showMenuView:nil];    
 }
 
-#pragma mark - 初始化方法
-- (instancetype)initWithScrollViewHeight:(CGFloat)height menuViewStyle:(XYMenuViewStyle)style {
-    if (self = [super initWithFrame:CGRectZero]) {
-        self.scrollViewHeight = height;
-        
-        self.menuViewStyle = style;
-        [self reloadSubView];
-    }
-    return self;
-}
+
 
 - (void)reloadSubView {
     
@@ -234,6 +239,8 @@
     
     // 强制更新布局，不然会产生问题
     [self layoutIfNeeded];
+    
+    
 }
 
 - (void)addItem:(UIButton *)btn btnType:(XYMenuViewBtnType)type title:(NSString *)title {
@@ -249,6 +256,12 @@
 
     [super layoutSubviews];
     
+   
+    [self makeSubviewConstr];
+    
+}
+
+- (void)makeSubviewConstr {
     NSDictionary *views = NSDictionaryOfVariableBindings(_contentView, _fastExportBtn, _hdExportBtn, _superclearBtn, _cancelBtn, _coverView, _scrollView);
     CGFloat itemWidth = xyScreenW / self.itemTitles.count;
     
@@ -259,12 +272,12 @@
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_coverView]|" options:kNilOptions metrics:nil views:views]];
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_coverView]|" options:kNilOptions metrics:nil views:views]];
         [self.coverView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_contentView]|" options:kNilOptions metrics:nil views:views]];
-
+        
         if (self.orientation == 0) {
-
+            
             self.contentViewBotOrTop = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.coverView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
         } else {
-
+            
             self.contentViewBotOrTop = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.coverView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
         }
         [self.coverView addConstraint:self.contentViewBotOrTop];
@@ -276,7 +289,7 @@
         
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_fastExportBtn(height)]-margin-[_hdExportBtn(height)]-margin-[_superclearBtn(height)]-marginC-[_cancelBtn(height)]|" options:kNilOptions metrics:metrics views:views]];
     } else if (self.menuViewStyle == XYMenuViewStyleVertical) {
-    
+        
         NSLog(@"%f", self.scrollViewHeight);
         
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_coverView]|" options:kNilOptions metrics:nil views:views]];
@@ -300,8 +313,6 @@
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cancelBtn(itemHeight)]-[_scrollView]|" options:kNilOptions metrics:metrics views:views]];
         
     }
-    
-    
 }
 
 

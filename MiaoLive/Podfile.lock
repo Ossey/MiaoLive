@@ -15,6 +15,10 @@ PODS:
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
   - BarrageRenderer (1.9.0)
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - LFLiveKit (2.1)
   - Masonry (1.0.1)
   - MBProgressHUD (1.0.0)
   - MJRefresh (3.1.12)
@@ -26,6 +30,8 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (~> 3.1.0)
   - BarrageRenderer (~> 1.9.0)
+  - FMDB
+  - LFLiveKit (~> 2.1)
   - Masonry (~> 1.0.1)
   - MBProgressHUD (~> 1.0.0)
   - MJRefresh (~> 3.1.12)
@@ -35,12 +41,14 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   BarrageRenderer: a5b54aef34eed1eab48f35ed594082ae446947c9
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  LFLiveKit: f9a0cb5941e4ab892a7d9522348ae370b19e67e7
   Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   MJRefresh: b96cdb21c4aa75a7b07654311ab2f315c497e806
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
   XRCarouselView: 5c2b53d61762b6dbc0fed312bf7f531707b9f288
 
-PODFILE CHECKSUM: 155cd74e1e738abdc5550380c7aeb5fe2bab2e23
+PODFILE CHECKSUM: 4510b4c68752354c66c363a5ea3db7fc43ce9d84
 
 COCOAPODS: 1.0.1
