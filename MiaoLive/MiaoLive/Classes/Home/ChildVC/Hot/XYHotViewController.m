@@ -18,4 +18,10 @@
     return XYHomeLiveTypeHot;
 }
 
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+    
+}
+
 @end

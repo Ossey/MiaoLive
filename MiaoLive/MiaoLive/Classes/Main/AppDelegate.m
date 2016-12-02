@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "XYLoginViewController.h"
 #import "Reachability.h"
-#import "XYNetworkTool.h"
+#import "XYNetworkRequest.h"
 #import "XYDBManager.h"
 
 @interface AppDelegate () {
@@ -39,6 +39,12 @@
     return YES;
 }
 
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    
+    // APP进入后台时清理本地数据
+    [[XYDBManager shareManager] clearLivesDataBase];
+}
+
 // 实时监测网络状态
 - (void)checkNetworkstate {
 
@@ -53,7 +59,7 @@
     NSString *tip = nil;
     
     // 获取当前网络状态
-    XYNetworkState currentState = [XYNetworkTool currnetNetworkState];
+    XYNetworkState currentState = [XYNetworkRequest currnetNetworkState];
     if (currentState == _previousState) return;
     
     _previousState = currentState;

@@ -57,7 +57,6 @@
 		18D5FA3E1DEDD7940062AACA /* XYConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9F11DEDD7930062AACA /* XYConst.m */; };
 		18D5FA3F1DEDD7940062AACA /* IJKMediaFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D5F9F31DEDD7930062AACA /* IJKMediaFramework.framework */; };
 		18D5FA401DEDD7940062AACA /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9F71DEDD7930062AACA /* Reachability.m */; };
-		18D5FA411DEDD7940062AACA /* XYNetworkTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9F91DEDD7930062AACA /* XYNetworkTool.m */; };
 		18D5FA421DEDD7940062AACA /* XYRefreshGifHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9FC1DEDD7930062AACA /* XYRefreshGifHeader.m */; };
 		18D5FA431DEDD7940062AACA /* XYProfileBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5FA001DEDD7930062AACA /* XYProfileBaseController.m */; };
 		18D5FA441DEDD7940062AACA /* XYProfileNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5FA021DEDD7930062AACA /* XYProfileNavigationController.m */; };
@@ -87,6 +86,7 @@
 		18ED6C021DEEB6ED0012B48C /* XYHomeTitleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED6C011DEEB6ED0012B48C /* XYHomeTitleButton.m */; };
 		18ED6C051DEEBF5B0012B48C /* XYProfileLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED6C041DEEBF5B0012B48C /* XYProfileLabel.m */; };
 		18ED6C091DEF160E0012B48C /* XYDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED6C081DEF160E0012B48C /* XYDBManager.m */; };
+		18F76CF81DF156A4005C4A1D /* XYNetworkRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F76CF71DF156A4005C4A1D /* XYNetworkRequest.m */; };
 		BECC6D53E6CA65E92514FCAD /* libPods-MiaoLive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1E5A0006A70FE586AE0B93D /* libPods-MiaoLive.a */; };
 /* End PBXBuildFile section */
 
@@ -188,8 +188,6 @@
 		18D5F9F31DEDD7930062AACA /* IJKMediaFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = IJKMediaFramework.framework; sourceTree = "<group>"; };
 		18D5F9F61DEDD7930062AACA /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		18D5F9F71DEDD7930062AACA /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		18D5F9F81DEDD7930062AACA /* XYNetworkTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYNetworkTool.h; sourceTree = "<group>"; };
-		18D5F9F91DEDD7930062AACA /* XYNetworkTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYNetworkTool.m; sourceTree = "<group>"; };
 		18D5F9FB1DEDD7930062AACA /* XYRefreshGifHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYRefreshGifHeader.h; sourceTree = "<group>"; };
 		18D5F9FC1DEDD7930062AACA /* XYRefreshGifHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYRefreshGifHeader.m; sourceTree = "<group>"; };
 		18D5F9FF1DEDD7930062AACA /* XYProfileBaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYProfileBaseController.h; sourceTree = "<group>"; };
@@ -233,6 +231,8 @@
 		18ED6C041DEEBF5B0012B48C /* XYProfileLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYProfileLabel.m; sourceTree = "<group>"; };
 		18ED6C071DEF160E0012B48C /* XYDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYDBManager.h; sourceTree = "<group>"; };
 		18ED6C081DEF160E0012B48C /* XYDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYDBManager.m; sourceTree = "<group>"; };
+		18F76CF61DF156A4005C4A1D /* XYNetworkRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYNetworkRequest.h; sourceTree = "<group>"; };
+		18F76CF71DF156A4005C4A1D /* XYNetworkRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYNetworkRequest.m; sourceTree = "<group>"; };
 		99DFFF6AE0BDA70885536852 /* Pods-MiaoLive.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoLive.release.xcconfig"; path = "Pods/Target Support Files/Pods-MiaoLive/Pods-MiaoLive.release.xcconfig"; sourceTree = "<group>"; };
 		B20CF5F6FA8D11010472A430 /* Pods-MiaoLive.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoLive.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MiaoLive/Pods-MiaoLive.debug.xcconfig"; sourceTree = "<group>"; };
 		D1E5A0006A70FE586AE0B93D /* libPods-MiaoLive.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MiaoLive.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -331,7 +331,7 @@
 				18D5F9761DEDD7930062AACA /* Living */,
 				18D5F9831DEDD7930062AACA /* MyOnlineFriendsList */,
 				18D5F9861DEDD7930062AACA /* NetRedLiving */,
-				18D5F9891DEDD7930062AACA /* New */,
+				18D5F9891DEDD7930062AACA /* NewLiving */,
 				18D5F9931DEDD7930062AACA /* OfficialLiving */,
 				18D5F9961DEDD7930062AACA /* OverseasLiving */,
 				18D5F9991DEDD7930062AACA /* Same CityLiving */,
@@ -417,13 +417,14 @@
 			path = NetRed;
 			sourceTree = "<group>";
 		};
-		18D5F9891DEDD7930062AACA /* New */ = {
+		18D5F9891DEDD7930062AACA /* NewLiving */ = {
 			isa = PBXGroup;
 			children = (
 				18D5F98A1DEDD7930062AACA /* Controller */,
 				18D5F98F1DEDD7930062AACA /* Model */,
 				18D5F9901DEDD7930062AACA /* View */,
 			);
+			name = NewLiving;
 			path = New;
 			sourceTree = "<group>";
 		};
@@ -764,10 +765,10 @@
 		18D5F9F51DEDD7930062AACA /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				18F76CF61DF156A4005C4A1D /* XYNetworkRequest.h */,
+				18F76CF71DF156A4005C4A1D /* XYNetworkRequest.m */,
 				18D5F9F61DEDD7930062AACA /* Reachability.h */,
 				18D5F9F71DEDD7930062AACA /* Reachability.m */,
-				18D5F9F81DEDD7930062AACA /* XYNetworkTool.h */,
-				18D5F9F91DEDD7930062AACA /* XYNetworkTool.m */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1024,7 +1025,6 @@
 				18D5FA351DEDD7940062AACA /* UIDevice+XYExtension.m in Sources */,
 				18ED6C021DEEB6ED0012B48C /* XYHomeTitleButton.m in Sources */,
 				18D5FA2A1DEDD7940062AACA /* XYLiveFlowLayout.m in Sources */,
-				18D5FA411DEDD7940062AACA /* XYNetworkTool.m in Sources */,
 				18D5F9591DEDD32E0062AACA /* main.m in Sources */,
 				18D5FA2D1DEDD7940062AACA /* XYLiveBottomToolView.m in Sources */,
 				18D5FA491DEDD7940062AACA /* XYSettingViewController.m in Sources */,
@@ -1048,6 +1048,7 @@
 				18D5FA381DEDD7940062AACA /* NSObject+XYExtension.m in Sources */,
 				18D5FA161DEDD7940062AACA /* XYHotADCell.m in Sources */,
 				18ED6BFF1DEEA31F0012B48C /* XYHomeMenuView.m in Sources */,
+				18F76CF81DF156A4005C4A1D /* XYNetworkRequest.m in Sources */,
 				18ED6C051DEEBF5B0012B48C /* XYProfileLabel.m in Sources */,
 				18D5FA1C1DEDD7940062AACA /* XYNewLiveFlowLayout.m in Sources */,
 				18D5FA401DEDD7940062AACA /* Reachability.m in Sources */,

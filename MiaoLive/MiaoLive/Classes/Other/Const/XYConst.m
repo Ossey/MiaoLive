@@ -10,4 +10,8 @@ NSNotificationName const XYLiveClickContributionListNotification = @"XYLiveClick
 /** 点击关注界面去看最热直播按钮的通知(当没有关注还有时会显示此按钮) */
 NSNotificationName const XYlookHotLiveNotification = @"XYlookHotLiveNotification";
 /** 更改显示主播列表的模式的通知 */
-UIKIT_EXTERN NSString *const XYChangeShowLiveTypeNotification = @"XYChangeShowLiveTypeNotification";
+NSString *const XYChangeShowLiveTypeNotification = @"XYChangeShowLiveTypeNotification";
+/** 本地化数据时 当前时间的key */
+NSString *const liveCacheTimeKey = @"liveCacheTimeKey";
+/** Home界面所有的子控制器的view即将显示在屏幕上时通知 */
+NSNotificationName const XYHomeSubViewsWillShowNotification = @"XYHomeSubViewsWillShowNotification";

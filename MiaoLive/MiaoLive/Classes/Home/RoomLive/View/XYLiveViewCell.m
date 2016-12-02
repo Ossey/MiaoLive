@@ -12,11 +12,10 @@
 #import "XYLiveItem.h"
 #import "UIViewController+XYExtension.h"
 #import <SDWebImageDownloader.h>
-#import "XYNetworkTool.h"
 #import "XYLiveBottomToolView.h"
 #import "XYLiveBottomSendeTaskView.h"
 #import "XYMenuView.h"
-
+#import "XYNetworkRequest.h"
 
 @interface XYLiveViewCell ()
 
@@ -316,14 +315,19 @@
     //      1、重新获取直播地址，服务端控制是否有地址返回。
     //      2、用户http请求该地址，若请求成功表示直播未结束，否则结束
     __weak typeof(self) weakSelf = self;
-    [[XYNetworkTool shareNetWork] GET:self.liveItem.flv parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [[XYNetworkRequest shareInstance] request:XYNetworkRequestTypeGET url:self.liveItem.flv parameters:nil progress:nil finished:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+       
+        if (error) {
+            NSLog(@"请求失败, 加载失败界面, 关闭播放器%@", error);
+            [weakSelf.moviePlayer shutdown];
+            [weakSelf.moviePlayer.view removeFromSuperview];
+            weakSelf.moviePlayer = nil;
+            return;
+        }
         NSLog(@"请求成功%@, 等待继续播放", responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"请求失败, 加载失败界面, 关闭播放器%@", error);
-        [weakSelf.moviePlayer shutdown];
-        [weakSelf.moviePlayer.view removeFromSuperview];
-        weakSelf.moviePlayer = nil;
+        
     }];
+    
 }
 
 - (void)stateDidChange {

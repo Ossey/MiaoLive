@@ -11,3 +11,7 @@ UIKIT_EXTERN NSNotificationName const XYLiveClickContributionListNotification;
 UIKIT_EXTERN NSNotificationName const XYlookHotLiveNotification;
 /** 更改显示主播列表的模式的通知 */
 UIKIT_EXTERN NSString *const XYChangeShowLiveTypeNotification;
+/** 本地化live数据时 当前时间的key */
+UIKIT_EXTERN NSString *const liveCacheTimeKey;
+/** Home界面所有的子控制器的view即将显示在屏幕上时通知 */
+UIKIT_EXTERN NSNotificationName const XYHomeSubViewsWillShowNotification;

@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 
  * show以后的回调
+ * 这样写回调的比直接在show或dismiss后面回调的好处是，不管你处理了多少个show或dismiss都会在这个block中统一执行回调，而不需要你写一下show就回调执行一次你要做的代码
  */
 @property (nonatomic, copy) void (^showCompletionBlock)();
 

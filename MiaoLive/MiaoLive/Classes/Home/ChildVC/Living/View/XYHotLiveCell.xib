@@ -15,7 +15,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="327"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="326"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="326.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oQR-Xv-qnf">
@@ -98,11 +98,12 @@
                 <outlet property="bigPicView" destination="mvX-w9-pvV" id="25l-LU-tIy"/>
                 <outlet property="locationName" destination="yvL-hl-Bep" id="ymQ-7H-eJx"/>
                 <outlet property="nameLabel" destination="yHw-ax-7ae" id="KPb-op-4kg"/>
+                <outlet property="showldentifi" destination="3sj-mY-p0B" id="b6f-Ra-l9y"/>
                 <outlet property="startView" destination="bbU-5n-gUh" id="Rdi-C6-CRV"/>
                 <outlet property="userProfileView" destination="Pzf-xb-MwD" id="V5p-XY-tuz"/>
                 <outlet property="watchNumberLabel" destination="ImQ-9y-K9Z" id="KAs-fO-Tsk"/>
             </connections>
-            <point key="canvasLocation" x="-181" y="-3"/>
+            <point key="canvasLocation" x="-181" y="-3.5"/>
         </tableViewCell>
     </objects>
     <resources>

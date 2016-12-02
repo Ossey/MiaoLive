@@ -264,6 +264,8 @@
 - (void)setupOneChildView:(NSInteger)i {
 
     UIViewController *vc = self.childViewControllers[i];
+    // 发布子控制器view显示的通知，并把显示的子控制器传给外界
+    [[NSNotificationCenter defaultCenter] postNotificationName:XYHomeSubViewsWillShowNotification object:vc];
     // 判断如果子控制器view的父控件已经有值了，就是说如果子控制器view已经添加上去了，就不再添加了,防止每次点击都会再次添加view
     if (vc.view.superview || vc.view.window) {
         return;
@@ -281,7 +283,7 @@
     
     NSInteger leftI = scrollView.contentOffset.x / xyScreenW;
     NSInteger rightI = leftI + 1;
-    // 1.取出缩放的两个按钮
+    // 取出缩放的两个按钮
     // 取出左边按钮
     UIButton *leftBtn = self.titleButtons[leftI];
     //NSLog(@"%ld, %ld, %f", leftI, rightI, scrollView.contentOffset.x);
@@ -294,7 +296,7 @@
         rightBtn = self.titleButtons[rightI];
     }
     
-    // 2.缩放按钮
+    // 缩放按钮
     // 计算需要缩放的比例
     CGFloat scaleR = scrollView.contentOffset.x / xyScreenW; // 放大
     scaleR -= leftI;
@@ -304,7 +306,7 @@
     rightBtn.transform = CGAffineTransformMakeScale(scaleR * self.titleBtnScale + 1, scaleR * self.titleBtnScale + 1);
     leftBtn.transform = CGAffineTransformMakeScale(scaleL * self.titleBtnScale + 1, scaleL * self.titleBtnScale + 1);
     
-    // 3.标题按钮文字颜色渐变
+    // 标题按钮文字颜色渐变
     UIColor *leftColor = [UIColor colorWithRed:scaleL green:0.0f blue:0.0f alpha:1.0f];
     UIColor *rightColor = [UIColor colorWithRed:scaleR green:0.0f blue:0.0f alpha:1.0f];
     [leftBtn setTitleColor:leftColor forState:UIControlStateNormal];
@@ -318,12 +320,12 @@
     // 计算当前角标
     NSInteger i = scrollView.contentOffset.x / xyScreenW;
     
-    // 1.设置选中的按钮的默认颜色为红色
+    // 设置选中的按钮的默认颜色为红色
     // 注意：当我们创建完按钮时，应该讲按钮添加到一个可变数组中，方便我们使用的时候根据角标取出对应按钮
     UIButton *button = self.titleButtons[i];
     [self selectedBtn:button];
     
-    // 2.加载对应的控制器的view
+    // 加载对应的控制器的view
     [self setupOneChildView:i];
     
 }

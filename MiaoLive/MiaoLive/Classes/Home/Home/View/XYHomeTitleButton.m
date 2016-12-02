@@ -12,9 +12,6 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self setTitle:@"广场" forState:UIControlStateNormal];
-        [self setImage:[UIImage imageNamed:@"title"] forState:UIControlStateNormal];
-        [self setImage:[UIImage imageNamed:@"title_selected"] forState:UIControlStateSelected];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     return self;

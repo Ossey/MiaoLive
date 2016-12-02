@@ -74,7 +74,7 @@
         
         self.contentViewTopConst.constant = 0;
         
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:0.5 animations:^{
             [superView layoutIfNeeded];
             
         } completion:^(BOOL finished) {
@@ -105,7 +105,7 @@
         
         self.contentViewTopConst.constant = CGRectGetHeight(self.contentView.frame);
     
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:0.5 animations:^{
             
             [self layoutIfNeeded];
             
@@ -138,12 +138,12 @@
 
 - (void)reloadSubView {
     
-    if (self.subviews) {
-        for (UIView *view in self.subviews) {
-            [view removeFromSuperview];
-            
-        }
-    }
+//    if (self.subviews) {
+//        for (UIView *view in self.subviews) {
+//            [view removeFromSuperview];
+//            
+//        }
+//    }
     UIView *coverView = [[UIView alloc] init];
     [self addSubview:coverView];
     _coverView = coverView;

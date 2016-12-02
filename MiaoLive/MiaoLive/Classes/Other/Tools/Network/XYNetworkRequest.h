@@ -4,10 +4,11 @@
 //
 //  Created by mofeini on 16/12/2.
 //  Copyright © 2016年 com.test.demo. All rights reserved.
-//
+//  网络请求工具类
 
 #import <Foundation/Foundation.h>
 
+// 网络请求类型的枚举
 typedef NS_ENUM(NSInteger, XYNetworkRequestType) {
     XYNetworkRequestTypeGET = 0,  // GET请求
     XYNetworkRequestTypePOST,     // POST请求
@@ -15,39 +16,49 @@ typedef NS_ENUM(NSInteger, XYNetworkRequestType) {
     XYNetworkRequestTypeDELETE,   // DELETE请求
 };
 
-/**
- * 请求完成的回调
- */
-typedef void(^FinishedCallBack)(id responseObject, NSError *error);
+typedef NS_ENUM(NSInteger, XYNetworkState) {
+    
+    XYNetworkStateNone = 0,
+    XYNetworkState2G,
+    XYNetworkState3G,
+    XYNetworkState4G,
+    XYNetworkStateWIFI
+};
 
-/**
- * 请求响应block
- */
-//typedef void(^ReponseCallBack)(id dataObject, NSError *error);
+typedef void (^DownloadProgress)(NSProgress *progress);
 
-/**
- 监听进度响应block
- */
+// 请求完成的回调
+typedef void(^FinishedCallBack)(NSURLSessionDataTask *task, id responseObject, NSError *error);
+// 监听进度响应block
 typedef void(^ProgressCallBack)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
 
 
 @class XYFileConfig;
 @interface XYNetworkRequest : NSObject
 
++ (instancetype)shareInstance;
+
+/**
+ * @explain 判断当前网络状态
+ *
+ * @return  当前网络状态
+ */
++ (XYNetworkState)currnetNetworkState;
+
 /**
  * 根据传入的请求方式发送网络请求
  */
-+ (void)request:(XYNetworkRequestType)type url:(NSString *)urlStr parameters:(NSDictionary *)parameters progress:(ProgressCallBack)progress finished:(FinishedCallBack)finishedCallBack;
+- (void)request:(XYNetworkRequestType)type url:(NSString *)urlStr parameters:(NSDictionary *)parameters progress:(DownloadProgress)progress finished:(FinishedCallBack)finishedCallBack;
 
 /**
  * 下载文件，监听文件下载进度
  */
-+ (void)downloadRequest:(NSString *)url progress:(ProgressCallBack)progressHandler complete:(FinishedCallBack)completionHandler;
+- (void)downloadRequest:(NSString *)url progress:(ProgressCallBack)progressHandler complete:(FinishedCallBack)completionHandler;
 
 /**
  * 文件上传, 未监听上传进度
  */
-+ (void)updateRequest:(NSString *)url parameters:(NSDictionary *)parameters fileConfig:(XYFileConfig *)fileConfig finished:(FinishedCallBack)finishedCallBack;
+- (void)updateRequest:(NSString *)url parameters:(NSDictionary *)parameters fileConfig:(XYFileConfig *)fileConfig finished:(FinishedCallBack)finishedCallBack;
 
 
 @end

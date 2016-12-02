@@ -26,6 +26,12 @@
     [self setup];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
+ }
+
 - (void)setup {
 
     self.view.backgroundColor = [UIColor whiteColor];

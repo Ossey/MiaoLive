@@ -14,12 +14,12 @@
 #import "XYNewLiveController.h"
 #import "XYNewLiveCell.h"
 #import "XYRefreshGifHeader.h"
-#import "XYNetworkTool.h"
 #import "XYLiveUserItem.h"
 #import "XYNewLiveFlowLayout.h"
 #import "XYRoomLiveController.h"
 #import "XYLiveItem.h"
 #import "XYProfileNavigationController.h"
+#import "XYNetworkRequest.h"
 
 @interface XYNewLiveController () {
     NSTimer *_timer;
@@ -70,6 +70,7 @@ static NSString * const reuseIdentifier = @"Cell";
     [super viewWillAppear:animated];
     
     [self startTimer];
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -100,8 +101,14 @@ static NSString * const reuseIdentifier = @"Cell";
     // http://live.9158.com/Room/GetNewRoomOnline?page=1
     NSString *urlStr = [xyBaseURLStr stringByAppendingPathComponent:@"Room/GetNewRoomOnline"];
     NSDictionary *parameters = @{@"page": @(self.currentPage)};
-    [[XYNetworkTool shareNetWork] GET:urlStr parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
+    [[XYNetworkRequest shareInstance] request:XYNetworkRequestTypeGET url:urlStr parameters:parameters progress:nil finished:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (error) {
+            [self.collectionView.mj_header endRefreshing];
+            [self.collectionView.mj_footer endRefreshing];
+            self.currentPage--;
+            [self xy_showMessage:@"网络异常"];
+            return;
+        }
         // 停止刷新
         [self.collectionView.mj_header endRefreshing];
         [self.collectionView.mj_footer endRefreshing];
@@ -130,11 +137,6 @@ static NSString * const reuseIdentifier = @"Cell";
             }
         }
         
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [self.collectionView.mj_header endRefreshing];
-        [self.collectionView.mj_footer endRefreshing];
-        self.currentPage--;
-        [self xy_showMessage:@"网络异常"];
     }];
     
     

@@ -9,7 +9,6 @@
 #import "XYHomeLiveController.h"
 #import "XYHotLiveCell.h"
 #import "XYRefreshGifHeader.h"
-#import "XYNetworkTool.h"
 #import "XYLiveItem.h"
 #import "UIViewController+XYExtension.h"
 #import "XYTopADItem.h"
@@ -21,6 +20,7 @@
 #import "XYHomeMenuView.h"
 #import "XYHotLivelViewSmalCell.h"
 #import "XYDBManager.h"
+#import "XYNetworkRequest.h"
 
 /**
  根据青花瓷抓取第一次进入此页面的GET请求:@"http://live.9158.com/Fans/GetHotLive?page=1
@@ -30,7 +30,9 @@ static NSString *const cellReusableIdentifier = @"XYHotViewController";
 static NSString *const adCellReusableIdentifier = @"XYHotADCell";
 static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 
-@interface XYHomeLiveController () 
+@interface XYHomeLiveController () {
+    UIButton *_navigationTitleBtn;
+}
 /** 当前页 */
 @property (nonatomic, assign) NSInteger currentPage;
 /** 最热直播数据模型数组 */
@@ -43,11 +45,17 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 @property (nonatomic, strong) NSMutableDictionary *loadLiveParameters;
 @property (nonatomic, weak) UICollectionView *collectionView;
 @property (nonatomic, strong) XYHomeLiveFlowLayout *flowLayout;
-
+@property (nonatomic, strong) XYHomeMenuView *menuView;
 @end
 
 @implementation XYHomeLiveController
 #pragma mark - Lazy loading
+- (XYHomeMenuView *)menuView {
+    if (_menuView == nil) {
+        _menuView = [XYHomeMenuView menuViewToSuperView:self.view];
+    }
+    return _menuView;
+}
 
 - (UICollectionView *)collectionView {
     if (_collectionView == nil) {
@@ -79,9 +87,9 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     return urlStr;
 }
 
-- (NSMutableDictionary *)loadLiveParameters {
+- (NSMutableDictionary *)loadLiveParametersWithPage:(NSInteger)page {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    parameters[@"page"] = @(self.currentPage);
+    parameters[@"page"] = @(page);
     parameters[@"useridx"] = @65952190;
     parameters[@"type"] = @(self.liveType);
     parameters[@"province"] = @"%E6%B5%99%E6%B1%9F%E7%9C%81"; // 此字段为省份
@@ -116,6 +124,10 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     [self addobserver];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
 
     [super viewWillDisappear:animated];
@@ -135,62 +147,103 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     // 添加collectionView的头部视图
     [self.collectionView registerClass:[XYHotADCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:adCellReusableIdentifier];
     
-    self.currentPage = 1;
     self.collectionView.mj_header = [XYRefreshGifHeader headerWithRefreshingBlock:^{
-        self.currentPage = 1;
-        // 请求最热直播数据
-        [self getHotLiveList];
-        // 请求顶部广告数据
-        [self getTopAD];
+        [self loadNewData];
     }];
     
     self.collectionView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-        self.currentPage++;
-        [self getHotLiveList];
+        [self loadMoreData];
     }];
     
+    // 没有缓存过上次刷新数据的时间，说明是第一次启用app，也就没有加载过数据就直接刷新
     [self.collectionView.mj_header beginRefreshing];
+    
+    
 
 }
 
 - (void)addobserver {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showLiveStyle:) name:XYChangeShowLiveTypeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clickTitleButtonNote:) name:XYHomeSubViewsWillShowNotification object:nil];
+}
+
+- (void)clickTitleButtonNote:(NSNotification *)note {
+    
+    // 当点击了别的标题按钮时，让menuVew 隐藏
+    [self.menuView dismissMenuView];
 }
 
 - (void)showLiveStyle:(NSNotification *)note {
 
     // 获取导航titleView的按钮
     UIButton *btn = note.object;
+    _navigationTitleBtn = btn;
     
-    XYHomeMenuView *menuView = [XYHomeMenuView menuViewToSuperView:self.view];
+    btn.isSelected ? [self.menuView dismissMenuView] : [self.menuView showMenuView];;
     
-    [menuView setDismissCompletionBlock:^{
+    // 这样写回调的比直接在show或dismiss后面回调的好处是，不管你处理了多少个show或dismiss都会在这个block中统一执行回调，而不需要你写一下show就回调执行一次你要做的代码
+    // show回调
+    [self.menuView setShowCompletionBlock:^{
+        btn.selected = YES;
+    }];
+    // dissmiss回调
+    [self.menuView setDismissCompletionBlock:^{
         btn.selected = NO;
-        
     }];
     
-    if (btn.isSelected == 0 ) {
-        [menuView dismissMenuView:^{
-            
-        }];
-        return;
-    }
     
-    [menuView showMenuView];
-
-    [menuView setMenuViewClickBlock:^(XYHomeMenuViewBtnType type) {
+    __weak typeof(self) weakSelf = self;
+    [self.menuView setMenuViewClickBlock:^(XYHomeMenuViewBtnType type) {
         
         if (type == 0) {
-            self.flowLayout.columnNumber = 1;
+            weakSelf.flowLayout.columnNumber = 1;
         } else if (type == 1) {
-            self.flowLayout.columnNumber = 2;
+            weakSelf.flowLayout.columnNumber = 2;
 
         }
     }];
     
- 
+ btn.selected = !btn.isSelected;
     
 }
+
+#pragma mark GetDataSoure
+
+
+
+- (void)loadNewData {
+
+    /**
+     取出lives数组中的模型，判断下当前数组中最后20个模型对应的pos对应的useridx与新请求的数据(每次请求都是20个)是否发生改变，如果发送改变就将新的20个数据添加到数据的后面
+     */
+    
+    NSLog(@"下拉刷新");
+
+    // 请求顶部广告数据
+    [self getTopAD];
+    self.currentPage = 1;
+    [self getDataWithPage:self.currentPage];
+}
+
+- (void)loadMoreData {
+    NSLog(@"上拉加载");
+    self.currentPage++;
+//    NSLog(@"currentPage==%ld", self.currentPage);
+    NSRange range = NSMakeRange(self.currentPage * 10, 10);
+    [[XYDBManager shareManager] queryDatabaseWithRange:range completion:^(NSArray *resultArray) {
+        if (![self isEmptyArray:resultArray]) {
+            [self.lives addObjectsFromArray:resultArray];
+            [self.collectionView reloadData];
+            [self.collectionView.mj_footer endRefreshing];
+             NSLog(@"数据库加载%lu条更多数据", resultArray.count);
+        } else {
+            // 数据库没有更多数据时，从网络请求
+            [self getDataWithPage:self.currentPage];
+        }
+    }];
+    
+}
+
 
 #pragma mark - 数据请求
 // 请求顶部banner数据
@@ -200,7 +253,12 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSString *urlStr = [xyBaseURLStr stringByAppendingPathComponent:@"Living/GetAD"];
         NSDictionary *parameters = @{@"tabid": @1};
-        [[XYNetworkTool shareNetWork] GET:urlStr parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        [[XYNetworkRequest shareInstance] request:XYNetworkRequestTypeGET url:urlStr parameters:parameters progress:nil finished:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            if (error) {
+                [self xy_showMessage:@"网络异常, 请尝试刷新"];
+                return;
+            }
+            
             NSArray *result = responseObject[@"data"];
             if (![self isEmptyArray:result]) {
                 [self.topADS removeAllObjects]; // 防止重复添加AD
@@ -213,41 +271,43 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
                 
                 [self xy_showMessage:@"网络异常, 请尝试刷新"];
             }
-        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"%@", error);
-            [self xy_showMessage:@"网络异常, 请尝试刷新"];
+
         }];
-        
     });
     
 }
+- (void)getDataWithPage:(NSInteger)page {
+    NSLog(@"发送网络请求！");
+    NSMutableDictionary *parameters = [self loadLiveParametersWithPage:page];
+    [[XYNetworkRequest shareInstance] request:XYNetworkRequestTypeGET url:self.loadLiveURLStr parameters:parameters progress:nil finished:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (error) { // 网络请求失败
+            self.currentPage--;
+            NSLog(@"%@", error.localizedDescription);
+            [self xy_showMessage:@"网络异常, 请尝试刷新"];
+            if (!self.lives.count) {
+                // 网络错误且lives模型数组中没有数据时再去读取本地数据
+                NSRange range = NSMakeRange(_currentPage * 10, 10);
+                [[XYDBManager shareManager] queryDatabaseWithRange:range completion:^(NSArray *resultArray) {
+                    [self.lives addObjectsFromArray:resultArray];
 
-// 请求最热主播数据
-- (void)getHotLiveList {
-  
-    [[XYNetworkTool shareNetWork] GET:self.loadLiveURLStr parameters:self.loadLiveParameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSDictionary *_Nullable responseObject) {
-        // 正常应该先获取当前登录用户ID，如当前无用户ID，则用户未登陆，就不需要加载微博数据，但是我未做登录，暂时跳过
+                }];
+            }
+            
+            [self.collectionView.mj_header endRefreshing];
+            [self.collectionView.mj_footer endRefreshing];
+            return;
+        }
+        
+        // 应该先获取当前登录用户ID，如当前无用户ID，则用户未登陆，就不需要加载数据，但是我未做登录，暂时跳过
         // 从后台请求数据
         [self loadLivesFromNetwork:responseObject];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"%@", error);
-        self.currentPage--;
-        [self xy_showMessage:@"网络异常, 请尝试刷新"];
-        
-        // 网络错误就读取本地数据
-        [self loadLivesFromDB];
-
-        [self.collectionView.mj_header endRefreshing];
-        [self.collectionView.mj_footer endRefreshing];
     }];
 }
 
 
+
 // 从服务器请求数据
 - (void)loadLivesFromNetwork:(NSDictionary *)responseObject {
-
-    NSLog(@"%@", responseObject);
     
     // 转换模型
     NSMutableArray *resultArray = [NSMutableArray array];
@@ -259,18 +319,27 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
             if ([obj isKindOfClass:[NSDictionary class]]) {
                 XYLiveItem *item = [XYLiveItem LiveItemWithDict:obj];
                 [resultArray addObject:item];
+                
             }
         }
-        // 请求数据完成后，将数据缓存到数据库
-        [self cacheLives:responseObject[@"data"][@"list"]];
     }
     
     if (![self isEmptyArray:resultArray]) {
-        if (self.currentPage == 1) { // 当currentPage为1时是下拉刷新，此时会导致重复添加数据，所以每次下拉刷新时移除以前的数据
+        if (self.currentPage == 1) {
+            // 当currentPage为1时是下拉刷新，由于服务器字段不全,此时会导致重复请求新数据，所以每次下拉刷新时移除以前的数据
             [self.lives removeAllObjects];
+        }
+        /**
+         * 刷新数据思路:网络上获取到数据之后存入缓存和数据库，网络正常时若缓存中有直接从缓存中读取，缓存中没有从数据库中加载，网络失败时，从数据库中加载数据
+         */
+        for (XYLiveItem *item in resultArray) {
+
+            // 将每一个模型的数据缓存到本地
+            [[XYDBManager shareManager] insertDatabaseWithModel:item ID:[NSString stringWithFormat:@"%ld", (long)item.pos]];
         }
         [self.lives addObjectsFromArray:resultArray];
         [self.collectionView reloadData];
+        
     } else {
         [self xy_showMessage:@"暂时没有更多最新数据"];
         // 恢复当前页
@@ -280,71 +349,25 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     [self.collectionView.mj_header endRefreshing];
     [self.collectionView.mj_footer endRefreshing];
     
-   
-
 }
 
-// 请求数据完成后，将数据缓存到数据库
-- (void)cacheLives:(NSArray *)resultArray {
-    
-    
-    // 遍历数据数组，取出每一个字典，转换为NSString保存到数据库
-    for (id Objc in resultArray) {
-        // 将每一个字典转换为字符串
-        NSError *error;
-        NSData *objData = [NSJSONSerialization dataWithJSONObject:Objc options:NSJSONWritingPrettyPrinted error:&error];
-        NSString *objStr = [[NSString alloc] initWithData:objData encoding:NSUTF8StringEncoding];
-        
-        // 执行SQL插入语句
-        NSString *insertSql = @"insert into t_lives(livesText) values (?)";
-        NSLog(@"%@", Objc[@"pos"]);
-        // 4.执行sql语句
-        [[XYDBManager shareManager].dbQueue inDatabase:^(FMDatabase *db) {
-            if ([db executeUpdate:insertSql withArgumentsInArray:@[objStr]]) {
-                [self xy_showMessage:@"[sql插入]语句执行成功"];
-            } else {
-                [self xy_showMessage:@"[sql插入]语句执行失败"];
-            }
-        }];
+// 根据缓存的条数，判断下一页到底是加载数据库里面的数据，还是重新从网络上请求最新的数据，这里有一点瑕疵，就是当缓存的数目不为10的倍数的时候，比如说是12条数据，那么它只会加载缓存中的前10条数据，当要加载下一页的数据时，只能从网络上获取下一页的数据
+//- (void)footerRereshing
+//{
+//    _page++;
+//    NSInteger count = [[XYDBManager shareManager] databaseCount];
+//    if(count/10 >= _page)
+//    {
+//        // 从数据库中的读取数据
+////        [[XYDBManager shareManager] checkDatabaseFromPage:_page];
+////        [[XYDBManager shareManager]
+//    } else
+//    {
+//        // 从网络加载数据
+//        [self getHotLiveList];
+//    }
+//}
 
-    }
-}
-
-- (void)loadLivesFromDB {
-    
-    // 定义一个临时模型数组，用于将本地数据库查询到的数据添加到里面的
-    NSMutableArray<XYLiveItem *> *tempArrayM = [NSMutableArray array];
-    // 请求失败时查询缓存的本地数据库
-    // 执行查询语句
-    NSString *querySql = [NSString stringWithFormat:@"SELECT *FROM t_lives WHERE id > 0"];
-    [[XYDBManager shareManager].dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:querySql withArgumentsInArray:nil];
-        
-        // 遍历查询结果
-        while (resultSet.next) {
-            // 获取本地数据库中的livesText字段对应的数据
-            NSString *liveText = [resultSet stringForColumn:@"livesText"];
-            
-            // 将字符串转换为字典
-            NSError *error;
-            NSData *liveData = [liveText dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary *live = [NSJSONSerialization JSONObjectWithData:liveData options:NSJSONReadingMutableContainers error:&error];
-            if (error) {
-                NSLog(@"%@", error.localizedDescription);
-            }
-            // 将 字典 转换为 模型 拼接到 临时模型数组 中
-            XYLiveItem *item = [XYLiveItem LiveItemWithDict:live];
-            [tempArrayM addObject:item];
-            
-            // 移除当前数据源中所有模型(主要是为了防止本地数据库中加载的数据与数据源中的相同了)
-            
-            self.lives = tempArrayM;
-            [self.collectionView reloadData];
-        }
-        
-    }];
-    
-}
 
 #pragma mark - collectionView view data source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -400,10 +423,16 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 //  返回collectionView头部视图: 需要注意的是当flowLayout.headerReferenceSize的值为CGSizeZero时，不会调用此方法创建头视图
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    
        //如果是头视图
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         XYHotADCell *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:adCellReusableIdentifier forIndexPath:indexPath];
+        [header setImageClickBlock:^(XYTopADItem *topAD) {
+            if (topAD.link.length) {
+                XYWebViewController *web = [[XYWebViewController alloc] initWithURL:[NSURL URLWithString:topAD.link]];
+                web.navigationItem.title = topAD.title;
+                [self.navigationController pushViewController:web animated:YES];
+            }
+            }];
 
         header.adItems = self.topADS;
         return header;

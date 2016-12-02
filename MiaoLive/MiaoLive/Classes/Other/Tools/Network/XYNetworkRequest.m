@@ -20,7 +20,6 @@ typedef void(^RequestFailureCallBack)(NSURLSessionDataTask *task, NSError *error
 
 @interface XYNetworkRequest ()
 
-
 @end
 
 @implementation XYNetworkRequest
@@ -28,30 +27,38 @@ typedef void(^RequestFailureCallBack)(NSURLSessionDataTask *task, NSError *error
  * 判断网络状态是否可以使用的属性，当为YES时网络可以使用，NO则不能使用网络
  */
 static BOOL _isNetworkUse;
+static XYNetworkRequest *_instance;
 
++ (instancetype)shareInstance {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _instance = [XYNetworkRequest new];
+    });
+    return _instance;
+}
 
 /**
  * 根据传入的请求方式发送网络请求
  */
-+ (void)request:(XYNetworkRequestType)type url:(NSString *)urlStr parameters:(NSDictionary *)parameters progress:(ProgressCallBack)progress finished:(FinishedCallBack)finishedCallBack {
+- (void)request:(XYNetworkRequestType)type url:(NSString *)urlStr parameters:(NSDictionary *)parameters progress:(DownloadProgress)progress finished:(FinishedCallBack)finishedCallBack {
     
     // 定义请求成功回调的block
     RequestSuccessCallBack successCallBack = ^(NSURLSessionDataTask *task, id responseObject){
-        finishedCallBack(responseObject, nil);
+        finishedCallBack(task, responseObject, nil);
     };
     
     // 定义请求失败回调的block
     RequestFailureCallBack failureCallBack = ^(NSURLSessionDataTask *task,NSError *error){
-        finishedCallBack(nil, error);
+        finishedCallBack(task, nil, error);
     };
     
     // 根据type发送网络请求
     if (type == XYNetworkRequestTypeGET) {
-        [self.manager GET:urlStr parameters:parameters progress:nil success:successCallBack failure:failureCallBack];
+        [self.manager GET:urlStr parameters:parameters progress:progress success:successCallBack failure:failureCallBack];
     }
     
     if (type == XYNetworkRequestTypePOST) {
-        [self.manager POST:urlStr parameters:parameters progress:nil success:successCallBack failure:failureCallBack];
+        [self.manager POST:urlStr parameters:parameters progress:progress success:successCallBack failure:failureCallBack];
     }
     
     if (type == XYNetworkRequestTypePUT) {
@@ -66,12 +73,12 @@ static BOOL _isNetworkUse;
 /**
  * 下载文件请求
  */
-+ (void)downloadRequest:(NSString *)url progress:(ProgressCallBack)progressHandler complete:(FinishedCallBack)completionHandler {
+- (void)downloadRequest:(NSString *)url progress:(ProgressCallBack)progressHandler complete:(FinishedCallBack)completionHandler {
     
     // 下载之前，先检查网络是否可用，若不可用就不必下载
     if (![self checkNewworkStatus]) {
         progressHandler(0, 0, 0);
-        completionHandler(nil, nil);
+        completionHandler(nil, nil, nil);
         return;
     }
     
@@ -90,7 +97,7 @@ static BOOL _isNetworkUse;
         if (error) {
             NSLog(@"%@", error.localizedDescription);
         }
-        completionHandler(response, error);
+        completionHandler(nil, response, error);
     }];
     
     [manager setDownloadTaskDidWriteDataBlock:^(NSURLSession * _Nonnull session, NSURLSessionDownloadTask * _Nonnull downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
@@ -102,18 +109,21 @@ static BOOL _isNetworkUse;
 }
 
 /**
- * 上传文件请求
+ *  发送一个POST请求
+ *  @param fileConfig 文件相关参数模型
+ *  @param finishedCallBack 请求完成后的回调
+ *  无上传进度监听
  */
-+ (void)updateRequest:(NSString *)url parameters:(NSDictionary *)parameters fileConfig:(XYFileConfig *)fileConfig finished:(FinishedCallBack)finishedCallBack {
+- (void)updateRequest:(NSString *)url parameters:(NSDictionary *)parameters fileConfig:(XYFileConfig *)fileConfig finished:(FinishedCallBack)finishedCallBack {
     
     // 定义请求成功的block
     RequestSuccessCallBack successCallBack = ^(NSURLSessionDataTask *task, id responseObject){
-        finishedCallBack(responseObject, nil);
+        finishedCallBack(task, responseObject, nil);
     };
     
     // 定义请求失败的block
     RequestFailureCallBack failureCallBack = ^(NSURLSessionDataTask *task, NSError *error){
-        finishedCallBack(nil, error);
+        finishedCallBack(task, nil, error);
     };
     
     // 发送POST请求
@@ -127,20 +137,20 @@ static BOOL _isNetworkUse;
 
 
 
-+ (AFHTTPSessionManager *)manager {
+- (AFHTTPSessionManager *)manager {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+//    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/xml", @"text/plain", nil];
     manager.requestSerializer.timeoutInterval = 10; // 请求超时时间
     return manager;
 }
 
 /**
- * 监控网络状态
+ * 监控网络状态(主要检查网络是否可用)
  */
-+ (BOOL)checkNewworkStatus {
+- (BOOL)checkNewworkStatus {
     AFNetworkReachabilityManager *reachabiltyMnaager = [AFNetworkReachabilityManager sharedManager];
     
     [reachabiltyMnaager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
@@ -167,6 +177,40 @@ static BOOL _isNetworkUse;
     return _isNetworkUse;
 }
 
+// 检测网络状态，返回当前网络状态
++ (XYNetworkState)currnetNetworkState {
+    
+    NSArray *subviews = [[[xyApp valueForKey:@"statusBar"] valueForKey:@"foregroundView"] subviews];
+    
+    XYNetworkState state = XYNetworkStateNone;
+    for (id childView in subviews) {
+        if ([childView isKindOfClass:NSClassFromString(@"UIStatusBarDataNetworkItemView")]) {
+            // 获取状态码
+            NSInteger networkType =  [[childView valueForKey:@"dataNetworkType"] integerValue];
+            switch (networkType) {
+                case 0:
+                    state = XYNetworkStateNone;
+                    break;
+                case 1:
+                    state = XYNetworkState2G;
+                    break;
+                case 2:
+                    state = XYNetworkState3G;
+                    break;
+                case 3:
+                    state = XYNetworkState4G;
+                    break;
+                case 5:
+                    state = XYNetworkStateWIFI;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    return state;
+}
 
 
 
