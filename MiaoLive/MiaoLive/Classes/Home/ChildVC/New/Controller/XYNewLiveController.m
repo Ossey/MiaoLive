@@ -23,15 +23,23 @@
 
 @interface XYNewLiveController () {
     NSTimer *_timer;
+    
 }
 
 @property (nonatomic, strong) XYNewLiveFlowLayout *flowLayout;
 @property (nonatomic, assign) NSInteger currentPage;
 @property (nonatomic, strong) NSMutableArray *newlives;
-
+/** 存放已显示的cell的indexPath的数组 */
+@property (nonatomic, strong) NSMutableArray<NSIndexPath *> *showedIndexPaths;
 @end
 
 @implementation XYNewLiveController
+- (NSMutableArray *)showedIndexPaths {
+    if (_showedIndexPaths == nil) {
+        _showedIndexPaths = [NSMutableArray array];
+    }
+    return _showedIndexPaths;
+}
 - (NSMutableArray *)newlives {
     if (_newlives == nil) {
         _newlives = [NSMutableArray array];
@@ -83,7 +91,6 @@ static NSString * const reuseIdentifier = @"Cell";
 - (void)setup {
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.mj_header = [XYRefreshGifHeader headerWithRefreshingBlock:^{
-        
         self.currentPage = 1;
         // 请求最新直播数据
         [self getNewLiveList];
@@ -163,7 +170,7 @@ static NSString * const reuseIdentifier = @"Cell";
     
 }
 
-#pragma mark <UICollectionViewDataSource>
+#pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 
     return self.newlives.count;
@@ -173,10 +180,53 @@ static NSString * const reuseIdentifier = @"Cell";
     
     XYNewLiveCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
-    // Configure the cell
     cell.userItem = self.newlives[indexPath.item];
     
     return cell;
+}
+
+#pragma mark - UICollectionViewDelegate
+// Cell即将显示的时候调用
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    // 将所有已经显示过的cell放在showedIndexPaths数组中，只有第一次显示的时候才需要做动画
+    if ([self.showedIndexPaths containsObject:indexPath]) {
+        return;
+    } else {
+        [self.showedIndexPaths addObject:indexPath];
+        // 给cell做缩放动画
+        [self cellAnimateScale:cell];
+    }
+}
+
+// 缩放动画
+- (void)cellAnimateScale:(UICollectionViewCell *)cell {
+    CGFloat duration = 0.5;
+    cell.transform = CGAffineTransformMakeScale(0.3, 0.3);
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        cell.transform = CGAffineTransformMakeScale(1.0, 1.0);
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+// 移动动画-- 暂时不用-- 备用
+- (void)cellAnimateMove:(UICollectionViewCell *)cell indexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%@",NSStringFromCGRect(cell.frame));
+    
+    CGRect toFrame = cell.frame;
+    // Y ScrollView滑动到底部的时的Y
+    cell.frame = CGRectMake(cell.frame.origin.x, self.collectionView.contentSize.height + self.collectionView.contentOffset.y + self.collectionView.contentInset.top, cell.bounds.size.width, cell.bounds.size.height);
+    cell.layer.cornerRadius = cell.bounds.size.width * 0.5;
+    
+    CGFloat duration = (indexPath.item) * 0.2 + 0.2;
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        cell.frame = toFrame;
+        
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 

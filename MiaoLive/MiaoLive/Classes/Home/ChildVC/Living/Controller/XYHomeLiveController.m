@@ -31,7 +31,7 @@ static NSString *const adCellReusableIdentifier = @"XYHotADCell";
 static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 
 @interface XYHomeLiveController () {
-    UIButton *_navigationTitleBtn;
+    BOOL _isInitialize;
 }
 /** 当前页 */
 @property (nonatomic, assign) NSInteger currentPage;
@@ -46,10 +46,18 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 @property (nonatomic, weak) UICollectionView *collectionView;
 @property (nonatomic, strong) XYHomeLiveFlowLayout *flowLayout;
 @property (nonatomic, strong) XYHomeMenuView *menuView;
+/** 存放已显示的cell的indexPath的数组 */
+@property (nonatomic, strong) NSMutableArray<NSIndexPath *> *showedIndexPaths;
 @end
 
 @implementation XYHomeLiveController
 #pragma mark - Lazy loading
+- (NSMutableArray<NSIndexPath *> *)showedIndexPaths {
+    if (_showedIndexPaths == nil) {
+        _showedIndexPaths = [NSMutableArray array];
+    }
+    return _showedIndexPaths;
+}
 - (XYHomeMenuView *)menuView {
     if (_menuView == nil) {
         _menuView = [XYHomeMenuView menuViewToSuperView:self.view];
@@ -122,10 +130,12 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     
     [self setup];
     [self addobserver];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -136,7 +146,7 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 }
 
 - (void)setup {
-    
+    _isInitialize = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor whiteColor]; 
@@ -157,14 +167,12 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     
     // 没有缓存过上次刷新数据的时间，说明是第一次启用app，也就没有加载过数据就直接刷新
     [self.collectionView.mj_header beginRefreshing];
-    
-    
-
 }
 
 - (void)addobserver {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showLiveStyle:) name:XYChangeShowLiveTypeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clickTitleButtonNote:) name:XYHomeSubViewsWillShowNotification object:nil];
+    
 }
 
 - (void)clickTitleButtonNote:(NSNotification *)note {
@@ -174,51 +182,58 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 }
 
 - (void)showLiveStyle:(NSNotification *)note {
-
+    
+        
     // 获取导航titleView的按钮
     UIButton *btn = note.object;
-    _navigationTitleBtn = btn;
+    
     
     btn.isSelected ? [self.menuView dismissMenuView] : [self.menuView showMenuView];;
+    NSLog(@"isSelected==%d", btn.isSelected);
     
     // 这样写回调的比直接在show或dismiss后面回调的好处是，不管你处理了多少个show或dismiss都会在这个block中统一执行回调，而不需要你写一下show就回调执行一次你要做的代码
     // show回调
     [self.menuView setShowCompletionBlock:^{
         btn.selected = YES;
+        // 让按钮内部的imageView做旋转动画
+        [UIView animateWithDuration:0.2 animations:^{
+            btn.imageView.transform = CGAffineTransformMakeRotation(M_PI);
+        }];
     }];
     // dissmiss回调
     [self.menuView setDismissCompletionBlock:^{
         btn.selected = NO;
+        [UIView animateWithDuration:0.2 animations:^{
+            btn.imageView.transform = CGAffineTransformIdentity;
+        }];
     }];
     
     
     __weak typeof(self) weakSelf = self;
     [self.menuView setMenuViewClickBlock:^(XYHomeMenuViewBtnType type) {
-        
+    
         if (type == 0) {
             weakSelf.flowLayout.columnNumber = 1;
         } else if (type == 1) {
             weakSelf.flowLayout.columnNumber = 2;
-
+            
         }
+        [weakSelf.menuView dismissMenuView];
     }];
     
- btn.selected = !btn.isSelected;
     
 }
 
-#pragma mark GetDataSoure
 
-
-
+#pragma mark - 数据请求
 - (void)loadNewData {
-
+    
     /**
      取出lives数组中的模型，判断下当前数组中最后20个模型对应的pos对应的useridx与新请求的数据(每次请求都是20个)是否发生改变，如果发送改变就将新的20个数据添加到数据的后面
      */
     
     NSLog(@"下拉刷新");
-
+    
     // 请求顶部广告数据
     [self getTopAD];
     self.currentPage = 1;
@@ -228,14 +243,14 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
 - (void)loadMoreData {
     NSLog(@"上拉加载");
     self.currentPage++;
-//    NSLog(@"currentPage==%ld", self.currentPage);
+    //    NSLog(@"currentPage==%ld", self.currentPage);
     NSRange range = NSMakeRange(self.currentPage * 10, 10);
     [[XYDBManager shareManager] queryDatabaseWithRange:range completion:^(NSArray *resultArray) {
         if (![self isEmptyArray:resultArray]) {
             [self.lives addObjectsFromArray:resultArray];
             [self.collectionView reloadData];
             [self.collectionView.mj_footer endRefreshing];
-             NSLog(@"数据库加载%lu条更多数据", resultArray.count);
+            NSLog(@"数据库加载%lu条更多数据", resultArray.count);
         } else {
             // 数据库没有更多数据时，从网络请求
             [self getDataWithPage:self.currentPage];
@@ -244,8 +259,6 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     
 }
 
-
-#pragma mark - 数据请求
 // 请求顶部banner数据
 - (void)getTopAD {
     
@@ -410,6 +423,52 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
     return nil;
 }
 
+#pragma mark - UICollectionViewDelegate
+// Cell即将显示的时候调用
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.flowLayout.columnNumber == 2) {
+        
+        // 将所有已经显示过的cell放在showedIndexPaths数组中，只有第一次显示的时候才需要做动画
+        if ([self.showedIndexPaths containsObject:indexPath]) {
+            return;
+        } else {
+            [self.showedIndexPaths addObject:indexPath];
+            // 给cell做缩放动画
+//            [self cellAnimateScale:cell];
+            [self cellAnimateMove:cell indexPath:indexPath];
+        }
+    }
+}
+
+// 缩放动画
+- (void)cellAnimateScale:(UICollectionViewCell *)cell {
+    CGFloat duration = 0.5;
+    cell.transform = CGAffineTransformMakeScale(0.3, 0.3);
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        cell.transform = CGAffineTransformMakeScale(1.0, 1.0);
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+// 移动动画-- 暂时不用-- 备用
+- (void)cellAnimateMove:(UICollectionViewCell *)cell indexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%@",NSStringFromCGRect(cell.frame));
+    
+    CGRect toFrame = cell.frame;
+    // Y ScrollView滑动到底部的时的Y
+    cell.frame = CGRectMake(cell.frame.origin.x, self.collectionView.contentSize.height + self.collectionView.contentOffset.y + self.collectionView.contentInset.top, cell.bounds.size.width, cell.bounds.size.height);
+//    cell.layer.cornerRadius = cell.bounds.size.width * 0.5;
+    
+    CGFloat duration = (indexPath.item) * 0.2 + 0.2;
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        cell.frame = toFrame;
+        
+    } completion:^(BOOL finished) {
+        
+    }];
+}
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 

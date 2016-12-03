@@ -66,10 +66,9 @@
     [self setup];
     
     // 设置默认选中的控制器的索引
-    self.selectedIndex = 4;
+    self.selectedIndex = 2;
     
     [self addObserver];
-    
 }
 
 - (void)loadData {
@@ -112,7 +111,6 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"head_crown_24x24"] style:UIBarButtonItemStyleDone target:self action:@selector(rankCrown)];
     // 当默认进入时设置titleView为文字
     [self.titleBtn1 setTitle:@"广场" forState:UIControlStateNormal];
-    self.navigationItem.titleView = self.titleBtn1;
     self.navigationItem.titleView = self.titleBtn1;
     
     
@@ -213,7 +211,7 @@
     } else {
         [self.titleBtn setTitle:@"广场" forState:UIControlStateNormal];
         [self.titleBtn setImage:[UIImage imageNamed:@"title"] forState:UIControlStateNormal];
-        [self.titleBtn setImage:[UIImage imageNamed:@"title_selected"] forState:UIControlStateSelected];
+        [self.titleBtn setImage:[UIImage imageNamed:@"title"] forState:UIControlStateSelected];
         self.navigationItem.titleView = self.titleBtn;
         [self.titleBtn addTarget:self action:@selector(changeShowType:) forControlEvents:UIControlEventTouchUpInside];
     }

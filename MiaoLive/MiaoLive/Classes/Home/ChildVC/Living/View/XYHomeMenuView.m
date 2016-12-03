@@ -74,13 +74,13 @@
         
         self.contentViewTopConst.constant = 0;
         
-        [UIView animateWithDuration:0.5 animations:^{
-            [superView layoutIfNeeded];
+        [UIView animateWithDuration:1.0 animations:^{
+            [self layoutIfNeeded];
             
         } completion:^(BOOL finished) {
 //                        [self removeFromSuperview];
             self.hidden = YES;
-            
+
             if (block) {
                 block();
                 
@@ -101,15 +101,16 @@
     if (superView) {
         self.hidden = NO;
         // 先强制更新下
-        [self.superview  layoutIfNeeded];
+        [superView layoutIfNeeded];
         
         self.contentViewTopConst.constant = CGRectGetHeight(self.contentView.frame);
     
-        [UIView animateWithDuration:0.5 animations:^{
+        [UIView animateWithDuration:1.0 animations:^{
             
             [self layoutIfNeeded];
             
         } completion:^(BOOL finished) {
+            
             
             if (block) {
                 block();
@@ -160,7 +161,7 @@
         [btn setTitleColor:[UIColor purpleColor] forState:UIControlStateNormal];
         [btn setImage:[UIImage imageNamed:@"hot_bigView"] forState:UIControlStateNormal];
         [self.contentView addSubview:btn];
-        [btn setTitle:@"大图模式" forState:UIControlStateNormal];
+        [btn setTitle:@"大图" forState:UIControlStateNormal];
         btn.backgroundColor = [UIColor whiteColor];
         btn.tag = XYHomeMenuViewBtnTypeBig;
         [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -170,7 +171,7 @@
     [UIButton xy_button:^(UIButton *btn) {
         [btn setTitleColor:[UIColor purpleColor] forState:UIControlStateNormal];
         [self.contentView addSubview:btn];
-        [btn setTitle:@"小图模式" forState:UIControlStateNormal];
+        [btn setTitle:@"小图" forState:UIControlStateNormal];
         [btn setImage:[UIImage imageNamed:@"hot_SmallView"] forState:UIControlStateNormal];
         btn.backgroundColor = [UIColor whiteColor];
         btn.tag = XYHomeMenuViewBtnTypeSmall;
@@ -229,6 +230,7 @@
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.fastExportBtn attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.hdExportBtn attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.fastExportBtn attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.hdExportBtn attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+    
     
 }
 
