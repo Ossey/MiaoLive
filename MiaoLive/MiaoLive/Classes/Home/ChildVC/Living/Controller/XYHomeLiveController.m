@@ -435,8 +435,7 @@ static NSString *const smallCellReusableIdentifier = @"XYHotLivelViewSmalCell";
         } else {
             [self.showedIndexPaths addObject:indexPath];
             // 给cell做缩放动画
-//            [self cellAnimateScale:cell];
-            [self cellAnimateMove:cell indexPath:indexPath];
+            [self cellAnimateScale:cell];
         }
     }
 }

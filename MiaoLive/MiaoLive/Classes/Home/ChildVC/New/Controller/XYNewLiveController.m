@@ -116,6 +116,8 @@ static NSString * const reuseIdentifier = @"Cell";
             [self xy_showMessage:@"网络异常"];
             return;
         }
+        
+        
         // 停止刷新
         [self.collectionView.mj_header endRefreshing];
         [self.collectionView.mj_footer endRefreshing];
@@ -129,10 +131,11 @@ static NSString * const reuseIdentifier = @"Cell";
             // 恢复当前页码
             self.currentPage--;
         }
-        
+        /********** 加载数据成功 ************/
         if ([msg isEqualToString:@"success"]) {
             // 数组转模型
             NSArray *listArr = responseObject[@"data"][@"list"];
+            [listArr writeToFile:[xyDocumentPath stringByAppendingPathComponent:@"user.plist"] atomically:YES];
             for (id obj in listArr) {
                 if ([obj isKindOfClass:[NSDictionary class]]) {
                     XYLiveUserItem *userItem = [XYLiveUserItem LiveUserItemWithDict:obj];

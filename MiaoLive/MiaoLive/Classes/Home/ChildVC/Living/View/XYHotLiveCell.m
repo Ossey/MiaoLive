@@ -10,6 +10,7 @@
 #import <UIImageView+WebCache.h>
 #import "XYLiveItem.h"
 
+
 @interface XYHotLiveCell ()
 @property (weak, nonatomic) IBOutlet UIImageView *showldentifi;
 @property (weak, nonatomic) IBOutlet UIImageView *userProfileView;
@@ -18,7 +19,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *startView;
 @property (weak, nonatomic) IBOutlet UILabel *watchNumberLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *bigPicView;
-//@property (weak, nonatomic) IBOutlet UIButton *familyNameBtn;
 @property (weak, nonatomic) UILabel *familyNameLabel;
 @property (weak, nonatomic) UIImageView *family_bgView;
 @end

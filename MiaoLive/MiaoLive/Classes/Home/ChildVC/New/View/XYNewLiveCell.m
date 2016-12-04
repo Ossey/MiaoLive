@@ -23,6 +23,7 @@
 /** 用户头像 */
 @property (nonatomic, weak) UIImageView *photoView;
 
+
 @end
 
 @implementation XYNewLiveCell

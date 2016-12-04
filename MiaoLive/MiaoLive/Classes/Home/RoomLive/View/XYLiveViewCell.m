@@ -11,11 +11,12 @@
 #import "NSSafeObject.h"
 #import "XYLiveItem.h"
 #import "UIViewController+XYExtension.h"
-#import <SDWebImageDownloader.h>
 #import "XYLiveBottomToolView.h"
 #import "XYLiveBottomSendeTaskView.h"
 #import "XYMenuView.h"
 #import "XYNetworkRequest.h"
+#import "XYLiveTopListView.h"
+#import <UIImageView+WebCache.h>
 
 @interface XYLiveViewCell ()
 
@@ -30,10 +31,20 @@
 /** 蒙板,将所有的子控件添加到蒙版视图上面，主要目：移动子控件的frame时，只需要移动 coverView即可*/
 @property (nonatomic, weak) UIView *coverView;
 @property (nonatomic, strong) XYMenuView *menuView;
+@property (nonatomic, weak) XYLiveTopListView *topListView;
 
 @end
 @implementation XYLiveViewCell
 #pragma mark - Lazy Loading
+- (XYLiveTopListView *)topListView {
+    if (_topListView == nil) {
+        XYLiveTopListView *topListView = [[XYLiveTopListView alloc] init];
+        [self.coverView addSubview:topListView];
+        _topListView = topListView;
+        
+    }
+    return _topListView;
+}
 - (XYMenuView *)menuView {
     if (_menuView == nil) {
         _menuView = [XYMenuView menuViewToSuperView:xyApp.keyWindow contentHeight:200 animationOrientation:0 style:1];
@@ -64,8 +75,9 @@
 - (UIView *)coverView {
     if (_coverView == nil) {
         UIView *coverView = [[UIView alloc] init];
-//        [self.contentView addSubview:coverView]; // 添加到self.contentView中会产生问题导致tf弹出键盘时，约束产生问题
-        [self.superview addSubview:coverView];
+        [self.contentView addSubview:coverView]; // 添加到self.contentView中会产生问题导致tf弹出键盘时，约束产生问题
+
+//            [self.superview addSubview:coverView];
         [coverView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnCoverView)]];
         _coverView = coverView;
         coverView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.0];
@@ -129,24 +141,28 @@
 - (void)setLiveItem:(XYLiveItem *)liveItem {
 
     _liveItem = liveItem;
+    self.topListView.liveItem = liveItem;
     [self playFlv:liveItem.flv placeHolderURLStr:liveItem.bigpic];
+    
 }
+
+
 
 #pragma mark - 初始化方法
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setup];
+        [self setupUI];
         
     }
     return self;
 }
 
-- (void)setup {
+- (void)setupUI {
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
-    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    self.topListView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)layoutSubviews {
@@ -154,9 +170,10 @@
     [super layoutSubviews];
 
     [self.coverView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.height.mas_equalTo(self);
-        make.bottom.mas_equalTo(self).priorityHigh();
+        make.left.right.height.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView).priorityHigh();
     }];
+
     
     [self.sendTaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.coverView);
@@ -173,6 +190,14 @@
     if (_moviePlayer.view) {
         [_moviePlayer.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.contentView);
+        }];
+    }
+    
+    if (self.topListView) {
+        [self.topListView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.coverView).mas_offset(20);
+            make.left.right.mas_equalTo(self.coverView);
+            make.height.mas_equalTo(80);
         }];
     }
     
@@ -250,9 +275,10 @@
 - (void)clickPublickTalk {
     
     // 隐藏toolView，显示sendTaskView,并弹出textField
-    self.toolView.hidden = YES;
-    self.sendTaskView.hidden = NO;
-    [self.sendTaskView.tf becomeFirstResponder];
+
+//    [self.sendTaskView.tf becomeFirstResponder];
+//    self.toolView.hidden = YES;
+//    self.sendTaskView.hidden = NO;
 
 }
 
@@ -282,26 +308,26 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:XYLiveClickContributionListNotification object:nil];
 }
 
-- (void)keyboardFrameChange:(NSNotification *)note {
-#warning Bug未解决: 当键盘弹出后，当前cell整体会向上移动 | 将coverView添加到self.superView上暂时解决
-        
-    // 获取键盘的frame
-    CGRect frame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGFloat duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    
-    CGFloat offsetY = xyScreenH - frame.origin.y;
-    NSLog(@"%@--offsetY==%f", NSStringFromCGRect(frame), offsetY);
-    // 让coverView跟随键盘移动
-    [self.coverView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self).mas_offset(-offsetY);
-    }];
-
-    [UIView animateWithDuration:duration animations:^{
-        [self.superview layoutIfNeeded];
-        
-    }];
-    
-}
+//- (void)keyboardFrameChange:(NSNotification *)note {
+//#warning Bug未解决: 当键盘弹出后，当前cell整体会向上移动 | 将coverView添加到self.superView上暂时解决, 但是将coverView添加到self.superView又产生新的问题:就是执行方法时会先执行cell的item的set方法，再返回cell，就导致cell在还未添加到superView时，就将coverView添加到cell的superView(此时为nil)，
+//        
+//    // 获取键盘的frame
+//    CGRect frame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+//    CGFloat duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+//    
+//    CGFloat offsetY = xyScreenH - frame.origin.y;
+//    NSLog(@"%@--offsetY==%f", NSStringFromCGRect(frame), offsetY);
+//    // 让coverView跟随键盘移动
+//    [self.coverView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.mas_equalTo(self).mas_offset(-offsetY);
+//    }];
+//
+//    [UIView animateWithDuration:duration animations:^{
+//        [self.superview layoutIfNeeded];
+//        
+//    }];
+//    
+//}
 
 
 - (void)didFinish {
@@ -356,6 +382,7 @@
         
     }
 }
+
 
 
 - (void)dealloc {

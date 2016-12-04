@@ -11,21 +11,39 @@
 #import "XYLiveItem.h"
 
 @interface XYHotLivelViewSmalCell ()
-@property (weak, nonatomic) IBOutlet UIButton *familyNameBtn;
+
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *starImageView;
 @property (weak, nonatomic) IBOutlet UILabel *watchNumberLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *bigPicView;
-
+@property (weak, nonatomic) UILabel *familyNameLabel;
+@property (weak, nonatomic) UIImageView *family_bgView;
 @end
 @implementation XYHotLivelViewSmalCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    
+    UIImageView *family_bgView = [[UIImageView alloc] init];
+    family_bgView.image = [UIImage imageNamed:@"family_bg"];
+    [self.contentView addSubview:family_bgView];
+    self.family_bgView = family_bgView;
+    [family_bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).mas_offset(10);
+        make.top.mas_equalTo(self.contentView).mas_offset(5);
+        
+    }];
+    UILabel *familyNameLabel = [[UILabel alloc] init];
+    familyNameLabel.font = [UIFont systemFontOfSize:12];
+    familyNameLabel.textColor = [UIColor purpleColor];
+    [family_bgView addSubview:familyNameLabel];
+    self.familyNameLabel = familyNameLabel;
+    [familyNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(family_bgView).mas_offset(10);
+        make.right.mas_equalTo(family_bgView).mas_offset(-20); // 设置这个属性是为了防止文字超出了family_bgView显示，不好看
+        make.top.mas_equalTo(family_bgView).mas_offset(10);
+    }];
 }
-
 
 - (void)setLiveItem:(XYLiveItem *)liveItem {
     
@@ -39,10 +57,9 @@
         liveItem.gps = @"喵星";
     }
     
-    // 家族
-    [self.familyNameBtn setTitle:liveItem.familyName forState:UIControlStateNormal];
-    self.familyNameBtn.hidden = liveItem.familyName.length == 0;
-    
+    // 家族名称
+    self.familyNameLabel.text = liveItem.familyName;
+    self.family_bgView.hidden = !liveItem.familyName.length;
     
     // 星级
     self.starImageView.image = liveItem.starImage;

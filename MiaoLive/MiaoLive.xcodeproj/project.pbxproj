@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1817089F1DEDE79A00505582 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1817089E1DEDE79A00505582 /* AppDelegate.m */; };
 		181708A21DEDED9000505582 /* XYHomeLiveFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 181708A11DEDED9000505582 /* XYHomeLiveFlowLayout.m */; };
+		18BA35411DF3C1F1003164DD /* XYLiveTopListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BA35401DF3C1F1003164DD /* XYLiveTopListView.m */; };
 		18D5F9591DEDD32E0062AACA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D5F9581DEDD32E0062AACA /* main.m */; };
 		18D5F9641DEDD32E0062AACA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18D5F9631DEDD32E0062AACA /* Assets.xcassets */; };
 		18D5F96F1DEDD6DB0062AACA /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18D5F96E1DEDD6DB0062AACA /* Info.plist */; };
@@ -95,6 +96,8 @@
 		1817089E1DEDE79A00505582 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		181708A01DEDED9000505582 /* XYHomeLiveFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYHomeLiveFlowLayout.h; sourceTree = "<group>"; };
 		181708A11DEDED9000505582 /* XYHomeLiveFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYHomeLiveFlowLayout.m; sourceTree = "<group>"; };
+		18BA353F1DF3C1F1003164DD /* XYLiveTopListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XYLiveTopListView.h; path = ../../ChildVC/Living/View/XYLiveTopListView.h; sourceTree = "<group>"; };
+		18BA35401DF3C1F1003164DD /* XYLiveTopListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XYLiveTopListView.m; path = ../../ChildVC/Living/View/XYLiveTopListView.m; sourceTree = "<group>"; };
 		18D5F9541DEDD32E0062AACA /* MiaoLive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoLive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18D5F9581DEDD32E0062AACA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		18D5F9631DEDD32E0062AACA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -596,6 +599,8 @@
 		18D5F9BD1DEDD7930062AACA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				18BA353F1DF3C1F1003164DD /* XYLiveTopListView.h */,
+				18BA35401DF3C1F1003164DD /* XYLiveTopListView.m */,
 				18D5F9BE1DEDD7930062AACA /* XYLiveBottomSendeTaskView.h */,
 				18D5F9BF1DEDD7930062AACA /* XYLiveBottomSendeTaskView.m */,
 				18D5F9C01DEDD7930062AACA /* XYLiveBottomToolView.h */,
@@ -1041,6 +1046,7 @@
 				18D5FA1D1DEDD7940062AACA /* XYNewLiveCell.m in Sources */,
 				18D5FA331DEDD7940062AACA /* XYMainViewController.m in Sources */,
 				18D5FA241DEDD7940062AACA /* XYHomeViewController.m in Sources */,
+				18BA35411DF3C1F1003164DD /* XYLiveTopListView.m in Sources */,
 				1817089F1DEDE79A00505582 /* AppDelegate.m in Sources */,
 				18D5FA141DEDD7940062AACA /* XYHomeLiveController.m in Sources */,
 				18D5FA451DEDD7940062AACA /* XYEditProfileController.m in Sources */,

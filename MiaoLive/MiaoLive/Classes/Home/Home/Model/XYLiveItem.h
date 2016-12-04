@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *userId;
 /** 主播昵称 */
 @property (nonatomic, copy) NSString *myname;
-/** 直播星际 */
+/** 直播星级 */
 @property (nonatomic, assign) NSInteger starlevel;
 /** 主播头像URL， 实际是小图 */
 @property (nonatomic, copy) NSString *smallpic;
