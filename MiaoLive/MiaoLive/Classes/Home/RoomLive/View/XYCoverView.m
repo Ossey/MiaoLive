@@ -14,6 +14,14 @@
 
 @implementation XYCoverView
 
+
+
+
+@end
+
+
+@implementation XYCoverView (gestureRecognizer)
+
 + (void)coverViewWithSuperView:(UIView *)superView block:(void(^)(XYCoverView *view))block {
     
     if (superView) {
@@ -36,7 +44,7 @@
         }
         
     }
-   
+    
 }
 
 
@@ -120,6 +128,5 @@
     frame.size.height = self.superview.bounds.size.height;
     return frame;
 }
-
 
 @end

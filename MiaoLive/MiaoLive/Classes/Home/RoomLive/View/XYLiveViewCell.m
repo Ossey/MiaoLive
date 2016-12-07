@@ -81,7 +81,7 @@
         [XYCoverView coverViewWithSuperView:self.contentView block:^(XYCoverView * _Nonnull view) {
             [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnCoverView)]];
             _coverView = view;
-            view.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.1];
+            view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.05];
         }];
         
     }

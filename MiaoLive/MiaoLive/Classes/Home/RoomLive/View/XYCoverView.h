@@ -9,8 +9,16 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
 @interface XYCoverView : UIView
+
+
+@end
+
+
+
+
+
+@interface XYCoverView (gestureRecognizer)
 
 /**
  * @explain 创建一个XYCoverView实例的对象，并将当前对象添加为传入的superView的子控件, 外界不要再添加子控件
@@ -19,6 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @param   block  回调实例的对象
  */
 + (void)coverViewWithSuperView:(UIView *)superView block:(void(^)(XYCoverView *view))block;
-@end
 
+@end
 NS_ASSUME_NONNULL_END
