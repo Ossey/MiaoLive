@@ -17,6 +17,7 @@
 #import "XYNetworkRequest.h"
 #import "XYLiveTopListView.h"
 #import <UIImageView+WebCache.h>
+#import "XYCoverView.h"
 
 @interface XYLiveViewCell ()
 
@@ -29,7 +30,7 @@
 /** 直播间发送聊天信息的弹框，当点击publicTask按钮时，将toolView替换为sendTaskView，并将sendTaskView弹出 */
 @property (nonatomic, weak) XYLiveBottomSendeTaskView *sendTaskView;
 /** 蒙板,将所有的子控件添加到蒙版视图上面，主要目：移动子控件的frame时，只需要移动 coverView即可*/
-@property (nonatomic, weak) UIView *coverView;
+@property (nonatomic, weak) XYCoverView *coverView;
 @property (nonatomic, strong) XYMenuView *menuView;
 @property (nonatomic, weak) XYLiveTopListView *topListView;
 
@@ -74,13 +75,15 @@
 }
 - (UIView *)coverView {
     if (_coverView == nil) {
-        UIView *coverView = [[UIView alloc] init];
-        [self.contentView addSubview:coverView]; // 添加到self.contentView中会产生问题导致tf弹出键盘时，约束产生问题
+//        [self.contentView addSubview:coverView]; // 添加到self.contentView中会产生问题导致tf弹出键盘时，约束产生问题
 
 //            [self.superview addSubview:coverView];
-        [coverView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnCoverView)]];
-        _coverView = coverView;
-        coverView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.0];
+        [XYCoverView coverViewWithSuperView:self.contentView block:^(XYCoverView * _Nonnull view) {
+            [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnCoverView)]];
+            _coverView = view;
+            view.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.1];
+        }];
+        
     }
     return _coverView;
 }
